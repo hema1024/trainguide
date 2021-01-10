@@ -4,16 +4,18 @@ import com.ethic.trainguide.TrainGuideTestBase;
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.NoSuchRouteException;
-import com.sun.tools.javac.util.List;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
 
 public class TrainRouteGraphImplTest extends TrainGuideTestBase {
 
-    private final List<Station> EXPECTED_STATIONS = List.of(
+    private final List<Station> EXPECTED_STATIONS = Arrays.asList(
             new Station("A"),
             new Station("B"),
             new Station("C"));
@@ -60,7 +62,7 @@ public class TrainRouteGraphImplTest extends TrainGuideTestBase {
     public void testGetDistanceOfRoute_ForValidRoute() throws NoSuchRouteException {
         TrainRoute trainRoute = getAValidTrainRoute();
 
-        List<String> route = List.of("D", "C", "E", "B");
+        List<String> route = Arrays.asList("D", "C", "E", "B");
 
         int expectedDistance = 13;
         int distance = trainRoute.getDistanceOfRoute(route);
@@ -75,7 +77,26 @@ public class TrainRouteGraphImplTest extends TrainGuideTestBase {
 
         TrainRoute trainRoute = getAValidTrainRoute();
 
-        List<String> route = List.of("D", "C", "B");
+        List<String> route = Arrays.asList("D", "C", "B");
         trainRoute.getDistanceOfRoute(route);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetRoutesByNumberOfStops_ForInvalidOrigin() {
+        TrainRouteGraphImpl rainRoute = new TrainRouteGraphImpl();
+        rainRoute.getRoutesByNumberOfStops(null, "B", 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetRoutesByNumberOfStops_ForInvalidDestination() {
+        TrainRouteGraphImpl rainRoute = new TrainRouteGraphImpl();
+        rainRoute.getRoutesByNumberOfStops("A", null, 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetRoutesByNumberOfStops_ForInvalidStops() {
+        TrainRouteGraphImpl rainRoute = new TrainRouteGraphImpl();
+        rainRoute.getRoutesByNumberOfStops("A", "B", -9);
+    }
+
 }

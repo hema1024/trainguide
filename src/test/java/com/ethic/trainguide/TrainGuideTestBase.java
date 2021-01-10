@@ -1,12 +1,13 @@
 package com.ethic.trainguide;
 
-import com.ethic.trainguide.domain.Distance;
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.graph.TrainRouteGraphImpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TrainGuideTestBase {
 
@@ -19,19 +20,19 @@ public class TrainGuideTestBase {
         Station D = new Station("D");
         Station E = new Station("E");
 
-        A.addAdjacentStation(B, new Distance(5));
-        A.addAdjacentStation(D, new Distance(5));
-        A.addAdjacentStation(E, new Distance(7));
+        A.addAdjacentStation(B, 5);
+        A.addAdjacentStation(D, 5);
+        A.addAdjacentStation(E, 7);
 
-        B.addAdjacentStation(C, new Distance(4));
+        B.addAdjacentStation(C, 4);
 
-        C.addAdjacentStation(D, new Distance(8));
-        C.addAdjacentStation(E, new Distance(2));
+        C.addAdjacentStation(D, 8);
+        C.addAdjacentStation(E, 2);
 
-        D.addAdjacentStation(C, new Distance(8));
-        D.addAdjacentStation(E, new Distance(6));
+        D.addAdjacentStation(C, 8);
+        D.addAdjacentStation(E, 6);
 
-        E.addAdjacentStation(B, new Distance(3));
+        E.addAdjacentStation(B, 3);
 
         trainRoute.addStation(A);
         trainRoute.addStation(B);
@@ -52,19 +53,19 @@ public class TrainGuideTestBase {
         Station D = new Station("D");
         Station E = new Station("E");
 
-        A.addAdjacentStation(B, new Distance(-5));
-        A.addAdjacentStation(D, new Distance(5));
-        A.addAdjacentStation(E, new Distance(-7));
+        A.addAdjacentStation(B, -5);
+        A.addAdjacentStation(D, 5);
+        A.addAdjacentStation(E, -7);
 
-        B.addAdjacentStation(C, new Distance(4));
+        B.addAdjacentStation(C, 4);
 
-        C.addAdjacentStation(D, new Distance(8));
-        C.addAdjacentStation(E, new Distance(2));
+        C.addAdjacentStation(D, 8);
+        C.addAdjacentStation(E, 2);
 
-        D.addAdjacentStation(C, new Distance(-8));
-        D.addAdjacentStation(E, new Distance(6));
+        D.addAdjacentStation(C, -8);
+        D.addAdjacentStation(E, 6);
 
-        E.addAdjacentStation(B, new Distance(-3));
+        E.addAdjacentStation(B, -3);
 
         trainRoute.addStation(A);
         trainRoute.addStation(B);
@@ -78,6 +79,13 @@ public class TrainGuideTestBase {
 
     protected InputStream asInputStream(TrainRoute trainRoute) {
         return new ByteArrayInputStream(trainRoute.toString().getBytes());
+
+    }
+
+    protected List<String> reformatListStringStringToListString(List<List<String>> listOfListOfStrings) {
+        return listOfListOfStrings.stream()
+                .map(s -> s.toString().replaceAll("[\\[\\], ]", ""))
+                .collect(Collectors.toList());
 
     }
 
