@@ -1,7 +1,7 @@
 package com.ethic.trainguide.calculate;
 
 import com.ethic.trainguide.domain.Station;
-import com.ethic.trainguide.graph.TrainRoute;
+import com.ethic.trainguide.domain.TrainRoute;
 
 public interface ShortestPath {
 

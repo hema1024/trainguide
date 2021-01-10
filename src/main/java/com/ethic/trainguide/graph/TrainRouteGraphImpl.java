@@ -1,7 +1,7 @@
 package com.ethic.trainguide.graph;
 
-import com.ethic.trainguide.domain.Distance;
 import com.ethic.trainguide.domain.Station;
+import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.NoSuchRouteException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -49,11 +49,11 @@ public class TrainRouteGraphImpl implements TrainRoute {
 
         if(stationNames.size() > 1) {
             for (int i = 1; i < stationNames.size(); i++) {
-                Map.Entry<Station, Distance> adjacentStationEntry = currentStation.getAdjacentStationByName(stationNames.get(i));
+                Map.Entry<Station, Integer> adjacentStationEntry = currentStation.getAdjacentStationByName(stationNames.get(i));
                 if(adjacentStationEntry == null) {
                     throw new NoSuchRouteException("No such route " + stationNames.toString());
                 }
-                distanceOfRoute += adjacentStationEntry.getValue().getDistance();
+                distanceOfRoute += adjacentStationEntry.getValue();
                 currentStation = adjacentStationEntry.getKey();
             }
         }
@@ -68,8 +68,8 @@ public class TrainRouteGraphImpl implements TrainRoute {
         List<String> routes = new ArrayList();
 
         for(Station station : stations) {
-            for (Map.Entry<Station, Distance> entry : station.getAdjacentStations().entrySet()) {
-                routes.add(String.format("%s-%s-%d", station.getName(), entry.getKey().getName(), entry.getValue().getDistance()));
+            for (Map.Entry<Station, Integer> entry : station.getAdjacentStations().entrySet()) {
+                routes.add(String.format("%s-%s-%d", station.getName(), entry.getKey().getName(), entry.getValue()));
             }
         }
 

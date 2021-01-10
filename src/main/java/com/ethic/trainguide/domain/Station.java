@@ -1,6 +1,5 @@
 package com.ethic.trainguide.domain;
 
-import com.ethic.trainguide.graph.TrainRoute;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -12,12 +11,30 @@ import java.util.*;
  */
 public class Station {
 
+    /**
+     * Name of the station.
+     * This is also the unique ID, that identifies a station.
+     */
     private String name;
 
-    private Distance distance;
+    /**
+     * Distance from origin will be set only
+     * after a call to some shortest path algorithm.
+     * Until then this will be Integer.MAX_VALUE
+     */
+    private Integer distanceFromOrigin;
 
-    private Map<Station, Distance> adjacentStations = new HashMap<>();
+    /**
+     * Map to store adjacent stations to this station.
+     * The map value is the distance between this station
+     * and the adjacent station.
+     */
+    private Map<Station, Integer> adjacentStations = new HashMap<>();
 
+    /**
+     * Linked list that represents the route of the
+     * shortest path from the origin station to this station.
+     */
     private List<Station> shortestPathFromOrigin = new LinkedList();
 
     public Station(String name) {
@@ -26,27 +43,31 @@ public class Station {
         }
 
         this.name = name;
-        this.distance = new Distance(Integer.MAX_VALUE);
+        this.distanceFromOrigin = Integer.MAX_VALUE;
     }
 
     public String getName() {
         return name;
     }
 
-    public Distance getDistance() {
-        return distance;
+    public Integer getDistanceFromOrigin() {
+        return distanceFromOrigin;
     }
 
-    public void setDistance(Distance distance) {
-        this.distance = distance;
+    public void setDistanceFromOrigin(int distanceFromOrigin) {
+        this.distanceFromOrigin = distanceFromOrigin;
     }
 
-    public void setDistance(int distance) {
-        this.distance = new Distance(distance);
-    }
-
-    public Map<Station, Distance> getAdjacentStations() {
+    public Map<Station, Integer> getAdjacentStations() {
         return adjacentStations;
+    }
+
+    public void addAdjacentStation(Station adjacentStation, Integer distance) {
+        if(adjacentStation == null) {
+            throw new IllegalArgumentException("adjacentStation must not be null");
+        }
+
+        adjacentStations.put(adjacentStation, distance);
     }
 
     public List<Station> getShortestPathFromOrigin() {
@@ -57,17 +78,9 @@ public class Station {
         this.shortestPathFromOrigin = shortestPathFromOrigin;
     }
 
-    public void addAdjacentStation(Station adjacentStation, Distance distance) {
-        if(adjacentStation == null) {
-            throw new IllegalArgumentException("adjacentStation must not be null");
-        }
+    public Map.Entry<Station, Integer>  getAdjacentStationByName(String name) {
 
-        adjacentStations.put(adjacentStation, distance);
-    }
-
-    public Map.Entry<Station, Distance>  getAdjacentStationByName(String name) {
-
-        for(Map.Entry<Station, Distance> entry : getAdjacentStations().entrySet()) {
+        for(Map.Entry<Station, Integer> entry : getAdjacentStations().entrySet()) {
             if(entry.getKey().getName().equalsIgnoreCase(name)) {
                 return entry;
             }

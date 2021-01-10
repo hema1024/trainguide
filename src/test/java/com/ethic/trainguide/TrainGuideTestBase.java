@@ -2,7 +2,7 @@ package com.ethic.trainguide;
 
 import com.ethic.trainguide.domain.Distance;
 import com.ethic.trainguide.domain.Station;
-import com.ethic.trainguide.graph.TrainRoute;
+import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.graph.TrainRouteGraphImpl;
 
 import java.io.ByteArrayInputStream;

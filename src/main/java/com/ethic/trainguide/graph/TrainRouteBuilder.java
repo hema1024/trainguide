@@ -1,6 +1,6 @@
 package com.ethic.trainguide.graph;
 
-import com.ethic.trainguide.domain.Station;
+import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 
 public interface TrainRouteBuilder {

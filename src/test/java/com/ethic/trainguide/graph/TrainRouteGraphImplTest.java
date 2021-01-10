@@ -2,12 +2,12 @@ package com.ethic.trainguide.graph;
 
 import com.ethic.trainguide.TrainGuideTestBase;
 import com.ethic.trainguide.domain.Station;
+import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.NoSuchRouteException;
 import com.sun.tools.javac.util.List;
 import org.junit.Test;
 
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertTrue;
 

@@ -1,7 +1,7 @@
 package com.ethic.trainguide.graph;
 
-import com.ethic.trainguide.domain.Distance;
 import com.ethic.trainguide.domain.Station;
+import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 
 import java.io.*;
@@ -102,7 +102,7 @@ public class TrainRouteFromInputStreamBuilderImpl implements TrainRouteFromInput
             nameToStationMap.put(oneStop.getDestination(), destination);
         }
 
-        origin.addAdjacentStation(destination, new Distance(oneStop.getDistance()));
+        origin.addAdjacentStation(destination, oneStop.getDistance());
     }
 
     /**

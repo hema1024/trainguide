@@ -1,5 +1,7 @@
 package com.ethic.trainguide.graph;
 
+import com.ethic.trainguide.domain.TrainRoute;
+
 public class TrainRouteValidate {
 
     public static void validateTrainRoute(TrainRoute trainRoute) {

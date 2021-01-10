@@ -2,6 +2,7 @@ package com.ethic.trainguide.graph;
 
 import com.ethic.trainguide.TrainGuideTestBase;
 import com.ethic.trainguide.domain.Station;
+import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import org.junit.Test;
 

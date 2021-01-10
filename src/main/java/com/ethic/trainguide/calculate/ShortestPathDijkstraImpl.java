@@ -1,8 +1,7 @@
 package com.ethic.trainguide.calculate;
 
-import com.ethic.trainguide.domain.Distance;
 import com.ethic.trainguide.domain.Station;
-import com.ethic.trainguide.graph.TrainRoute;
+import com.ethic.trainguide.domain.TrainRoute;
 
 import java.util.*;
 
@@ -15,7 +14,7 @@ public class ShortestPathDijkstraImpl implements ShortestPath {
     public void setShortestPathFromOrigin(TrainRoute trainRoute, Station origin) {
 
         // distance between the origin station and itself is 0
-        origin.setDistance(0);
+        origin.setDistanceFromOrigin(0);
 
         Set<Station> settledStations = new HashSet<>();
         Set<Station> unsettledStations = new HashSet<>();
@@ -25,11 +24,11 @@ public class ShortestPathDijkstraImpl implements ShortestPath {
         while(unsettledStations.size() != 0) {
             Station currentStation = getStationWithShortestDistance(unsettledStations);
             unsettledStations.remove(currentStation);
-            for(Map.Entry<Station, Distance> adjacentEntry : currentStation.getAdjacentStations().entrySet()) {
+            for(Map.Entry<Station, Integer> adjacentEntry : currentStation.getAdjacentStations().entrySet()) {
                 Station adjacentStation = adjacentEntry.getKey();
 
                 if(!settledStations.contains(adjacentStation)) {
-                    setShortestDisatance(currentStation, adjacentStation, adjacentEntry.getValue().getDistance());
+                    setShortestDisatance(currentStation, adjacentStation, adjacentEntry.getValue());
                     unsettledStations.add(adjacentStation);
                 }
             }
@@ -48,11 +47,11 @@ public class ShortestPathDijkstraImpl implements ShortestPath {
         setShortestPathFromOrigin(trainRoute, origin);
     }
 
-    private void setShortestDisatance(Station currentStation, Station adjacentStation, int distance) {
-        int originDistance = currentStation.getDistance().getDistance();
-        int newDistance = originDistance + distance;
-        if(newDistance < adjacentStation.getDistance().getDistance()) {
-            adjacentStation.setDistance(newDistance);
+    private void setShortestDisatance(Station currentStation, Station adjacentStation, int edgeDistance) {
+        int distanceFromOriginOfCurrentStation = currentStation.getDistanceFromOrigin();
+        int newDistance = distanceFromOriginOfCurrentStation + edgeDistance;
+        if(newDistance < adjacentStation.getDistanceFromOrigin()) {
+            adjacentStation.setDistanceFromOrigin(newDistance);
             List<Station> shortestPath = new LinkedList<>(currentStation.getShortestPathFromOrigin());
             shortestPath.add(currentStation);
             adjacentStation.setShortestPathFromOrigin(shortestPath);
@@ -61,7 +60,7 @@ public class ShortestPathDijkstraImpl implements ShortestPath {
 
     private Station getStationWithShortestDistance(Set<Station> unsettledStations) {
         return unsettledStations.stream()
-                .min((s1, s2) -> s1.getDistance().getDistance() - s2.getDistance().getDistance())
+                .min((s1, s2) -> s1.getDistanceFromOrigin() - s2.getDistanceFromOrigin())
                 .get();
     }
 }

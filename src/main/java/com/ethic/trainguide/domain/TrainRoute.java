@@ -1,4 +1,4 @@
-package com.ethic.trainguide.graph;
+package com.ethic.trainguide.domain;
 
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.exception.NoSuchRouteException;
