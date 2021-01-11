@@ -31,12 +31,6 @@ public class Station {
      */
     private Map<Station, Integer> adjacentStations = new HashMap<>();
 
-    /**
-     * Linked list that represents the route of the
-     * shortest path from the origin station to this station.
-     */
-    private List<Station> shortestPathFromOrigin = new LinkedList();
-
     public Station(String name) {
         if(StringUtils.isEmpty(name)) {
             throw new IllegalArgumentException("name must not be null");
@@ -55,6 +49,10 @@ public class Station {
     }
 
     public void setDistanceFromOrigin(int distanceFromOrigin) {
+        if(distanceFromOrigin < 0) {
+            throw new IllegalArgumentException("distanceFromOrigin must be >= 0");
+        }
+
         this.distanceFromOrigin = distanceFromOrigin;
     }
 
@@ -67,15 +65,11 @@ public class Station {
             throw new IllegalArgumentException("adjacentStation must not be null");
         }
 
+        if(distance < 0) {
+            throw new IllegalArgumentException("distance must be >= 0");
+        }
+
         adjacentStations.put(adjacentStation, distance);
-    }
-
-    public List<Station> getShortestPathFromOrigin() {
-        return shortestPathFromOrigin;
-    }
-
-    public void setShortestPathFromOrigin(List<Station> shortestPathFromOrigin) {
-        this.shortestPathFromOrigin = shortestPathFromOrigin;
     }
 
     public Map.Entry<Station, Integer>  getAdjacentStationByName(String name) {

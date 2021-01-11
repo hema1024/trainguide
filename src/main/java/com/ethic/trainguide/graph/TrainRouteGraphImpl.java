@@ -1,7 +1,6 @@
 package com.ethic.trainguide.graph;
 
 import com.ethic.trainguide.calculate.ShortestPath;
-import com.ethic.trainguide.calculate.ShortestPathDijkstraImpl;
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.NoSuchRouteException;
@@ -16,6 +15,21 @@ public class TrainRouteGraphImpl implements TrainRoute {
 
     private Set<Station> stations = new HashSet();
     private static final String DELIMITER = "\t";
+
+    /**
+     * the origin station from which
+     * shortest path information is calculate
+     * and set in all other station objects.
+     * When the object is created, this is null, meaning
+     * there shortest path info is not available
+     * for any stations.
+     * In the first call to getShortestDistance()
+     * the shortest distance is computed based on the origin
+     * passed in.  After that, an instance of this object
+     * can only be used for getting shortest distance for the same
+     * origin station.
+     */
+    private String shortestPathOriginStation = null;
 
     public void TrainRouteGraph() {
     }
@@ -171,8 +185,16 @@ public class TrainRouteGraphImpl implements TrainRoute {
         if(originStation == null || destinationStation == null) {
             throw new NoSuchStationException(String.format("No such origin/destination station exists [%s, %s]", origin, destination));
         }
-        ShortestPath shortestPath = TrainGuideFactory.newShortestPath();
-        shortestPath.setShortestPathFromOrigin(this, origin);
+
+        if(shortestPathOriginStation != null) {
+            if(!shortestPathOriginStation.equalsIgnoreCase(originStation.getName())) {
+                throw new IllegalArgumentException("This instance can return shortest distance only when origin is " + origin);
+            }
+        } else {
+            // compute shortest paths to all stations from this origin
+            ShortestPath shortestPath = TrainGuideFactory.getShortestPath();
+            shortestPath.setShortestPathFromOrigin(this, origin);
+        }
 
         return destinationStation.getDistanceFromOrigin();
 
@@ -232,7 +254,7 @@ public class TrainRouteGraphImpl implements TrainRoute {
 
         for(Station station : stations) {
             for (Map.Entry<Station, Integer> entry : station.getAdjacentStations().entrySet()) {
-                routes.add(String.format("%s-%s-%d", station.getName(), entry.getKey().getName(), entry.getValue()));
+                routes.add(String.format("%s,%s,%d", station.getName(), entry.getKey().getName(), entry.getValue()));
             }
         }
 

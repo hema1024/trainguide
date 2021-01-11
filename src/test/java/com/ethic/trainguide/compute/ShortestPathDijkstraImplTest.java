@@ -8,6 +8,8 @@ import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.NoSuchStationException;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+
 public class ShortestPathDijkstraImplTest extends TrainGuideTestBase {
 
     @Test
@@ -17,7 +19,27 @@ public class ShortestPathDijkstraImplTest extends TrainGuideTestBase {
         ShortestPath shortestPath = new ShortestPathDijkstraImpl();
         shortestPath.setShortestPathFromOrigin(trainRoute, "D");
 
-        Station stationC = trainRoute.getStationByName("A");
-        System.out.println(stationC.getShortestPathFromOrigin());
+        int expectedShortestDistance = 8;
+        int shortestDistance = trainRoute.getShortestDistance("D", "C");
+        assertTrue(String.format("Exepected distance %d, got %d", expectedShortestDistance, shortestDistance),
+                expectedShortestDistance == shortestDistance);
+
     }
+
+    @Test(expected = NoSuchStationException.class)
+    public void testGetShortestPath_ForInvalidStation1() throws NoSuchStationException {
+        TrainRoute trainRoute = getAValidTrainRoute();
+
+        ShortestPath shortestPath = new ShortestPathDijkstraImpl();
+        shortestPath.setShortestPathFromOrigin(trainRoute, "F");
+    }
+
+    @Test(expected = NoSuchStationException.class)
+    public void testGetShortestPath_ForInvalidStation2() throws NoSuchStationException {
+        TrainRoute trainRoute = getAValidTrainRoute();
+
+        ShortestPath shortestPath = new ShortestPathDijkstraImpl();
+        shortestPath.setShortestPathFromOrigin(trainRoute, new Station("F"));
+    }
+
 }

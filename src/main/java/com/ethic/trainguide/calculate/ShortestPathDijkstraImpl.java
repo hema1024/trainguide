@@ -56,15 +56,12 @@ public class ShortestPathDijkstraImpl implements ShortestPath {
         int newDistance = distanceFromOriginOfCurrentStation + edgeDistance;
         if(newDistance < adjacentStation.getDistanceFromOrigin()) {
             adjacentStation.setDistanceFromOrigin(newDistance);
-            List<Station> shortestPath = new LinkedList<>(currentStation.getShortestPathFromOrigin());
-            shortestPath.add(currentStation);
-            adjacentStation.setShortestPathFromOrigin(shortestPath);
         }
     }
 
     private Station getStationWithShortestDistance(Set<Station> unsettledStations) {
         return unsettledStations.stream()
-                .min((s1, s2) -> s1.getDistanceFromOrigin() - s2.getDistanceFromOrigin())
+                .min(Comparator.comparing(Station::getDistanceFromOrigin))
                 .get();
     }
 }

@@ -1,5 +1,6 @@
 package com.ethic.trainguide;
 
+import com.ethic.trainguide.cache.LRUCache;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import com.ethic.trainguide.exception.NoSuchRouteException;
@@ -26,10 +27,12 @@ public class TrainGuideCliInterface {
     private static String MENU_NUMBER_OF_ROUTES_BY_DISTANCE_RESOURCE_FILE = "menu_number_of_routes_by_distance.txt";
     private static String MENU_SHORTEST_ROUTE_RESOURCE_FILE = "shortest_route.txt";
     private static String OUTPUT_PREFIX = "ANSWER : ";
+    private static int LRU_CACHE_CAPACITY = 50;
 
     private String graphDataFileName;
     private String columnDelimiter;
     private TrainRoute trainRoute;
+    private LRUCache<String, TrainRoute> lruCache;
     private Scanner scanner;
 
 
@@ -41,6 +44,7 @@ public class TrainGuideCliInterface {
         this.graphDataFileName = graphDataFileName;
         this.columnDelimiter = columnDelimiter;
         this.scanner = new Scanner(System.in);
+        this.lruCache = TrainGuideFactory.getLRUCache(LRU_CACHE_CAPACITY);
     }
 
     private String getMenuText(String resourceFileName) {
@@ -51,13 +55,13 @@ public class TrainGuideCliInterface {
 
     }
 
-    private void loadGraphDataFile() {
+    private TrainRoute newTrainRouteObjectFromGraphDataFile() {
 
         try {
             TrainRouteBuilder trainRouteBuilder = TrainGuideFactory.newTrainRouteFromInputStreamBuilder(
                     new FileInputStream(graphDataFileName), columnDelimiter);
 
-            trainRoute = trainRouteBuilder.build();
+            return trainRouteBuilder.build();
 
         } catch (IOException e) {
             System.out.println("Error opening input file : " + e.getMessage());
@@ -65,14 +69,19 @@ public class TrainGuideCliInterface {
         } catch (CannotBuildTrainRouteException e) {
             System.out.println("Error processing input file : " + e.getMessage());
             System.exit(-1);
+        } catch (Exception e) {
+            System.out.println("ERROR : " + e.getMessage());
+            System.exit(-1);
         }
+
+        return null;
     }
 
     public void run() {
 
         // read the input file and prepare train route graph object
         // to answer the questions
-        loadGraphDataFile();
+        trainRoute = newTrainRouteObjectFromGraphDataFile();
 
         // print the main menu and process the selections
         String menuText = getMenuText(MAIN_MENU_RESOURCE_FILE);
@@ -218,9 +227,18 @@ public class TrainGuideCliInterface {
         }
 
         String output = OUTPUT_PREFIX;
+        String origin = chunks[0].trim(), destination = chunks[1];
+
+        // check in cache if we have shortest route calculated
+        // for this origin station before
+        TrainRoute trainRoute = lruCache.getItem(origin);
+        if(trainRoute == null) {
+            trainRoute = newTrainRouteObjectFromGraphDataFile();
+            lruCache.putItem(origin, trainRoute);
+        }
 
         try {
-            output += trainRoute.getShortestDistance(chunks[0].trim(), chunks[1].trim());
+            output += trainRoute.getShortestDistance(origin, destination);
         } catch (Exception e) {
             output += e.getMessage();
         }
