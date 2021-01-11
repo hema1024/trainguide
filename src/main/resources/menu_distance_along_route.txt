@@ -1,0 +1,5 @@
+-------------------------------
+Distance along a certain route
+-------------------------------
+Enter the route for which you want to know the distance.
+Separate each town/station with a comma.  For example "A,B,C":

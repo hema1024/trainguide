@@ -3,6 +3,7 @@ package com.ethic.trainguide.graph;
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.HashMap;
@@ -10,8 +11,9 @@ import java.util.Map;
 
 public class TrainRouteFromInputStreamBuilderImpl implements TrainRouteFromInputStreamBuilder {
 
+    private static final String DEFAULT_DELIMITER = ",";
     private InputStream graphDataInputStream;
-    private Map<String, Station> nameToStationMap;
+    private String columnDelimiter;
 
     private class OneStop {
         private String origin;
@@ -38,11 +40,21 @@ public class TrainRouteFromInputStreamBuilderImpl implements TrainRouteFromInput
     }
 
     public TrainRouteFromInputStreamBuilderImpl(InputStream inputStream) {
+        this(inputStream, DEFAULT_DELIMITER);
+    }
+
+    public TrainRouteFromInputStreamBuilderImpl(InputStream inputStream, String columnDelimiter) {
         if(inputStream == null) {
             throw new IllegalArgumentException("inputStream must not be null");
         }
 
         this.graphDataInputStream = inputStream;
+
+        if(StringUtils.isEmpty(columnDelimiter)) {
+            this.columnDelimiter = DEFAULT_DELIMITER;
+        } else {
+            this.columnDelimiter = columnDelimiter;
+        }
     }
 
 
@@ -54,7 +66,7 @@ public class TrainRouteFromInputStreamBuilderImpl implements TrainRouteFromInput
     @Override
     public TrainRoute build() throws CannotBuildTrainRouteException {
 
-        nameToStationMap = buildStations();
+        Map<String, Station> nameToStationMap = buildStations();
 
         TrainRoute trainRoute = new TrainRouteGraphImpl();
 
@@ -70,12 +82,14 @@ public class TrainRouteFromInputStreamBuilderImpl implements TrainRouteFromInput
         BufferedReader reader = null;
         Map<String, Station> nameToStationMap = new HashMap();
 
+        int lineNumber = 0;
         try {
             reader = new BufferedReader(new InputStreamReader(graphDataInputStream));
-
             String line = null;
+
             while ((line = reader.readLine()) != null) {
-                addDestinationToSourceStation(nameToStationMap, parseOneStop(line));
+                lineNumber++;
+                addDestinationToSourceStation(nameToStationMap, parseOneStop(line, lineNumber));
             }
         } catch (IOException e) {
             throw new CannotBuildTrainRouteException(e);
@@ -111,10 +125,12 @@ public class TrainRouteFromInputStreamBuilderImpl implements TrainRouteFromInput
      * @param line represents a one stop route, expected format "<origin>-<destination>-<distance>"
      * @return
      */
-    private OneStop parseOneStop(String line) {
-        String[] chunks = line.split("-");
+    private OneStop parseOneStop(String line, int lineNumber) {
+        String[] chunks = line.split(columnDelimiter);
         if(chunks.length < 3) {
-            throw new IllegalArgumentException("Expected line format <origin>-<destination>-<distance>");
+            throw new IllegalArgumentException(
+                    String.format("Error on line %d ('%s').  Expected 3 columns, found %d",
+                            lineNumber, line, chunks.length));
         }
 
         return new OneStop(

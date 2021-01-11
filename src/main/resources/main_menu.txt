@@ -1,0 +1,10 @@
+----------------------------------------------------
+Welcome to TrainGuide, your guide to trip planning!
+----------------------------------------------------
+Select from the following menu options:
+1.  Distance along a certain route
+2.  Number of different routes between two towns, by number of stops
+3.  Number of different routes between two towns, by maximum distance
+4.  Shortest route between two towns
+5.  Exit
+Enter your selection (1/2/3/4/5) :
