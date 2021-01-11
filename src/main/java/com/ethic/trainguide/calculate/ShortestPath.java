@@ -2,6 +2,7 @@ package com.ethic.trainguide.calculate;
 
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
+import com.ethic.trainguide.exception.NoSuchStationException;
 
 public interface ShortestPath {
 
@@ -13,7 +14,7 @@ public interface ShortestPath {
      *               other stations must be computed
      * @return
      */
-    public void setShortestPathFromOrigin(TrainRoute trainRoute, Station origin);
+    public void setShortestPathFromOrigin(TrainRoute trainRoute, Station origin) throws NoSuchStationException;
 
     /**
      *
@@ -23,6 +24,6 @@ public interface ShortestPath {
      *               other stations must be computed
      * @return
      */
-    public void setShortestPathFromOrigin(TrainRoute trainRoute, String originName);
+    public void setShortestPathFromOrigin(TrainRoute trainRoute, String originName) throws NoSuchStationException;
 
 }

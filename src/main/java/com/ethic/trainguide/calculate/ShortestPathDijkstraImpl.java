@@ -2,6 +2,7 @@ package com.ethic.trainguide.calculate;
 
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
+import com.ethic.trainguide.exception.NoSuchStationException;
 
 import java.util.*;
 
@@ -11,7 +12,12 @@ public class ShortestPathDijkstraImpl implements ShortestPath {
 
 
     @Override
-    public void setShortestPathFromOrigin(TrainRoute trainRoute, Station origin) {
+    public void setShortestPathFromOrigin(TrainRoute trainRoute, Station origin) throws NoSuchStationException {
+        validateTrainRoute(trainRoute);
+
+        if(origin == null || trainRoute.getStationByName(origin.getName()) == null) {
+            throw new NoSuchStationException(String.format("Origin station '%s', not found in route", origin));
+        }
 
         // distance between the origin station and itself is 0
         origin.setDistanceFromOrigin(0);
@@ -40,9 +46,7 @@ public class ShortestPathDijkstraImpl implements ShortestPath {
     }
 
     @Override
-    public void setShortestPathFromOrigin(TrainRoute trainRoute, String originName) {
-        validateTrainRoute(trainRoute);
-
+    public void setShortestPathFromOrigin(TrainRoute trainRoute, String originName) throws NoSuchStationException {
         Station origin = trainRoute.getStationByName(originName);
         setShortestPathFromOrigin(trainRoute, origin);
     }

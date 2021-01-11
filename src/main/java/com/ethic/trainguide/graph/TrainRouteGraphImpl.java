@@ -1,8 +1,12 @@
 package com.ethic.trainguide.graph;
 
+import com.ethic.trainguide.calculate.ShortestPath;
+import com.ethic.trainguide.calculate.ShortestPathDijkstraImpl;
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.NoSuchRouteException;
+import com.ethic.trainguide.exception.NoSuchStationException;
+import com.ethic.trainguide.factory.TrainGuideFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -48,13 +52,17 @@ public class TrainRouteGraphImpl implements TrainRoute {
         }
 
         Station currentStation = getStationByName(stationNames.get(0));
+        if(currentStation == null) {
+            throw new NoSuchRouteException("No such route : " + stationNames.toString());
+        }
+
         int distanceOfRoute = 0;
 
         if(stationNames.size() > 1) {
             for (int i = 1; i < stationNames.size(); i++) {
                 Map.Entry<Station, Integer> adjacentStationEntry = currentStation.getAdjacentStationByName(stationNames.get(i));
                 if(adjacentStationEntry == null) {
-                    throw new NoSuchRouteException("No such route " + stationNames.toString());
+                    throw new NoSuchRouteException("No such route : " + stationNames.toString());
                 }
                 distanceOfRoute += adjacentStationEntry.getValue();
                 currentStation = adjacentStationEntry.getKey();
@@ -148,6 +156,26 @@ public class TrainRouteGraphImpl implements TrainRoute {
                 0, "", routes);
 
         return reformatRoutes(routes);
+    }
+
+    @Override
+    public int getShortestDistance(String origin, String destination) throws NoSuchStationException {
+
+        if(StringUtils.isEmpty(origin) || StringUtils.isEmpty(destination)) {
+            throw new IllegalArgumentException("origin/destination stations names must not be null");
+        }
+
+        Station originStation = getStationByName(origin);
+        Station destinationStation = getStationByName(destination);
+
+        if(originStation == null || destinationStation == null) {
+            throw new NoSuchStationException(String.format("No such origin/destination station exists [%s, %s]", origin, destination));
+        }
+        ShortestPath shortestPath = TrainGuideFactory.newShortestPath();
+        shortestPath.setShortestPathFromOrigin(this, origin);
+
+        return destinationStation.getDistanceFromOrigin();
+
     }
 
     private void getRoutesByDistance(Station destination,

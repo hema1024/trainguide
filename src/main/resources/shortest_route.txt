@@ -3,7 +3,3 @@ Shortest route between two towns
 ---------------------------------
 Enter the (1) origin station (2) destination station, comma separated
 For example "C,E":
-
-
-
-

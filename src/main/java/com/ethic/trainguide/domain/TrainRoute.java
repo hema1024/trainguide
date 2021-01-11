@@ -2,6 +2,7 @@ package com.ethic.trainguide.domain;
 
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.exception.NoSuchRouteException;
+import com.ethic.trainguide.exception.NoSuchStationException;
 
 import java.io.InputStream;
 import java.util.List;
@@ -46,6 +47,14 @@ public interface TrainRoute {
      * @return
      */
     public List<List<String>> getRoutesByDistance(String originName, String destinationName, int maxDistance);
+
+    /**
+     * Method to find the shortest distance between two stations
+     * @param origin
+     * @param destination
+     * @return
+     */
+    public int getShortestDistance(String origin, String destination) throws NoSuchStationException;
 
 
 }

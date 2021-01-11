@@ -25,6 +25,7 @@ public class TrainGuideCliInterface {
     private static String MENU_NUMBER_OF_ROUTES_BY_STOPS_RESOURCE_FILE = "menu_number_of_routes_by_stops.txt";
     private static String MENU_NUMBER_OF_ROUTES_BY_DISTANCE_RESOURCE_FILE = "menu_number_of_routes_by_distance.txt";
     private static String MENU_SHORTEST_ROUTE_RESOURCE_FILE = "shortest_route.txt";
+    private static String OUTPUT_PREFIX = "ANSWER : ";
 
     private String graphDataFileName;
     private String columnDelimiter;
@@ -95,16 +96,30 @@ public class TrainGuideCliInterface {
 
         String menuText = getMenuText(MENU_DISTANCE_ALONG_ROUTE_RESOURCE_FILE);
         System.out.println(menuText);
+
+        String chunks[] = new String[]{};
+        String userInput = "y";
+        while(userInput.equalsIgnoreCase("y")) {
+            System.out.println(menuText);
+            chunks = scanner.nextLine().split(",");
+            if(chunks.length <= 1) {
+                System.out.println(String.format("Expected at least 2 towns/stations, got %d.  Try agian (y/n)?", chunks.length));
+                userInput = scanner.nextLine();
+            } else {
+                userInput = "n";
+            }
+        }
+
         List<String> route =
-                Arrays.stream(scanner.nextLine().split(","))
+                Arrays.stream(chunks)
                 .map(s -> s.trim())
                 .collect(Collectors.toList());
 
-        String output = "";
+        String output = OUTPUT_PREFIX;
         try {
-            output = new Integer(trainRoute.getDistanceOfRoute(route)).toString();
+            output += new Integer(trainRoute.getDistanceOfRoute(route)).toString();
         } catch (NoSuchRouteException e) {
-            output = "NO SUCH ROUTE";
+            output += "NO SUCH ROUTE";
         }
 
         System.out.println(output);
@@ -114,24 +129,103 @@ public class TrainGuideCliInterface {
     private void processRoutesByStops() {
 
         String menuText = getMenuText(MENU_NUMBER_OF_ROUTES_BY_STOPS_RESOURCE_FILE);
-        System.out.println(menuText);
 
-        String chunks[] = scanner.nextLine().split(",");
-        if(chunks.length < 3) {
-            System.out.println(String.format("Expected 3 parameters, got %d.  Try agian (y/n)?", chunks.length));
-            if(scanner.nextLine() == "y");
-            return;
+        String chunks[] = new String[]{};
+        String userInput = "y";
+        int maxNumStops = 0;
+        while(userInput.equalsIgnoreCase("y")) {
+            System.out.println(menuText);
+            chunks = scanner.nextLine().split(",");
+            if(chunks.length < 3) {
+                System.out.println(String.format("Expected 3 parameters, got %d.  Try agian (y/n)?", chunks.length));
+                userInput = scanner.nextLine();
+            } else {
+                try {
+                    maxNumStops = Integer.parseInt(chunks[2].trim());
+                    userInput = "n";
+                } catch (NumberFormatException ex) {
+                    System.out.println("Invalid value for (3) max. no of stops.  Try agian (y/n)?");
+                    userInput = scanner.nextLine();
+                }
+            }
         }
 
-        String output = "";
+        String output = OUTPUT_PREFIX;
+
         try {
-            output = new Integer(trainRoute.getDistanceOfRoute(route)).toString();
-        } catch (NoSuchRouteException e) {
-            output = "NO SUCH ROUTE";
+            output += Integer.toString(trainRoute.getRoutesByNumberOfStops(
+                    chunks[0].trim(), chunks[1].trim(), maxNumStops).size());
+        } catch (IllegalArgumentException e) {
+            output += "NO SUCH ROUTE";
+        } catch (Exception e) {
+            output += e.getMessage();
         }
 
         System.out.println(output);
 
+    }
+
+    private void processRoutesByDistance() {
+        String menuText = getMenuText(MENU_NUMBER_OF_ROUTES_BY_DISTANCE_RESOURCE_FILE);
+
+        String chunks[] = new String[]{};
+        String userInput = "y";
+        int maxDistance = 0;
+        while(userInput.equalsIgnoreCase("y")) {
+            System.out.println(menuText);
+            chunks = scanner.nextLine().split(",");
+            if(chunks.length < 3) {
+                System.out.println(String.format("Expected 3 parameters, got %d.  Try agian (y/n)?", chunks.length));
+                userInput = scanner.nextLine();
+            } else {
+                try {
+                    maxDistance = Integer.parseInt(chunks[2].trim());
+                    userInput = "n";
+                } catch (NumberFormatException ex) {
+                    System.out.println("Invalid value for (3) max. distance.  Try agian (y/n)?");
+                    userInput = scanner.nextLine();
+                }
+            }
+        }
+
+        String output = OUTPUT_PREFIX;
+
+        try {
+            output += Integer.toString(trainRoute.getRoutesByDistance(
+                    chunks[0].trim(), chunks[1].trim(), maxDistance).size());
+        } catch (Exception e) {
+            output += e.getMessage();
+        }
+
+        System.out.println(output);
+    }
+
+    private void processShortestDistance() {
+        String menuText = getMenuText(MENU_SHORTEST_ROUTE_RESOURCE_FILE);
+
+        String chunks[] = new String[]{};
+        String userInput = "y";
+        int maxDistance = 0;
+        while(userInput.equalsIgnoreCase("y")) {
+            System.out.println(menuText);
+            chunks = scanner.nextLine().split(",");
+            if(chunks.length != 2) {
+                System.out.println(String.format("Expected 2 parameters, got %d.  Try agian (y/n)?", chunks.length));
+                userInput = scanner.nextLine();
+            } else {
+                userInput = "n";
+            }
+        }
+
+        String output = OUTPUT_PREFIX;
+
+        try {
+            output += trainRoute.getShortestDistance(chunks[0].trim(), chunks[1].trim());
+        } catch (Exception e) {
+            output += e.getMessage();
+        }
+
+        System.out.println(output);
     }
 
     private void processSelectedOption(int option) {
@@ -144,8 +238,10 @@ public class TrainGuideCliInterface {
                 processRoutesByStops();
                 break;
             case 3:
+                processRoutesByDistance();
                 break;
             case 4:
+                processShortestDistance();
                 break;
             case 5:
                 System.exit(0);
