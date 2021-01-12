@@ -82,12 +82,12 @@ public class TrainRouteGraphImpl implements TrainRoute {
         }
 
         Station originStation = getStationByName(originName);
-        if(getStationByName(originName) == null) {
+        if(originStation == null) {
             throw new IllegalArgumentException(String.format("Origin station %s does not exist in train route", originName));
         }
 
         Station destinationStation = getStationByName(destinationName);
-        if(getStationByName(originName) == null) {
+        if(destinationStation == null) {
             throw new IllegalArgumentException(String.format("Destination station %s does not exist in train route", destinationName));
         }
 
@@ -138,12 +138,12 @@ public class TrainRouteGraphImpl implements TrainRoute {
         }
 
         Station originStation = getStationByName(originName);
-        if(getStationByName(originName) == null) {
+        if(originStation == null) {
             throw new IllegalArgumentException(String.format("Origin station %s does not exist in train route", originName));
         }
 
         Station destinationStation = getStationByName(destinationName);
-        if(getStationByName(originName) == null) {
+        if(destinationStation == null) {
             throw new IllegalArgumentException(String.format("Destination station %s does not exist in train route", destinationName));
         }
 

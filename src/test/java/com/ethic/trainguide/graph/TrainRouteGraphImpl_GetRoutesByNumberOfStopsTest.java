@@ -17,15 +17,27 @@ import static org.junit.Assert.assertTrue;
 public class TrainRouteGraphImpl_GetRoutesByNumberOfStopsTest extends TrainGuideTestBase {
 
     @Test(expected = IllegalArgumentException.class)
-    public void testGetRoutesByNumberOfStops_ForInvalidOrigin() throws CannotBuildTrainRouteException {
+    public void testGetRoutesByNumberOfStops_ForNullOrigin() throws CannotBuildTrainRouteException {
         TrainRoute trainRoute = getAValidTrainRoute();
         trainRoute.getRoutesByNumberOfStops(null, "B", 3);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testGetRoutesByNumberOfStops_ForInvalidDestination() throws CannotBuildTrainRouteException  {
+    public void testGetRoutesByNumberOfStops_ForInvalidOrigin() throws CannotBuildTrainRouteException {
+        TrainRoute trainRoute = getAValidTrainRoute();
+        trainRoute.getRoutesByNumberOfStops("K", "B", 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetRoutesByNumberOfStops_ForNullDestination() throws CannotBuildTrainRouteException  {
         TrainRoute trainRoute = getAValidTrainRoute();
         trainRoute.getRoutesByNumberOfStops("A", null, 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetRoutesByNumberOfStops_ForInvalidDestination() throws CannotBuildTrainRouteException  {
+        TrainRoute trainRoute = getAValidTrainRoute();
+        trainRoute.getRoutesByNumberOfStops("A", "L", 3);
     }
 
     @Test(expected = IllegalArgumentException.class)

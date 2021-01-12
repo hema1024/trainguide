@@ -14,15 +14,27 @@ import static org.junit.Assert.assertTrue;
 public class TrainRouteGraphImpl_GetRoutesByDistanceTest extends TrainGuideTestBase {
 
     @Test(expected = IllegalArgumentException.class)
-    public void testGetRoutesByDistance_ForInvalidOrigin() throws CannotBuildTrainRouteException {
+    public void testGetRoutesByDistance_ForNullOrigin() throws CannotBuildTrainRouteException {
         TrainRoute trainRoute = getAValidTrainRoute();
         trainRoute.getRoutesByDistance(null, "B", 3);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testGetRoutesByDistance_ForInvalidDestination() throws CannotBuildTrainRouteException {
+    public void testGetRoutesByDistance_ForInvalidOrigin() throws CannotBuildTrainRouteException {
+        TrainRoute trainRoute = getAValidTrainRoute();
+        trainRoute.getRoutesByDistance("G", "B", 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetRoutesByDistance_ForNullDestination() throws CannotBuildTrainRouteException {
         TrainRoute trainRoute = getAValidTrainRoute();
         trainRoute.getRoutesByDistance("A", null, 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetRoutesByDistance_ForInvalidDestination() throws CannotBuildTrainRouteException {
+        TrainRoute trainRoute = getAValidTrainRoute();
+        trainRoute.getRoutesByDistance("A", "F", 3);
     }
 
     @Test(expected = IllegalArgumentException.class)

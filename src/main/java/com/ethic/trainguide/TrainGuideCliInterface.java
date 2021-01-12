@@ -62,7 +62,7 @@ public class TrainGuideCliInterface {
     private TrainRoute newTrainRouteFromGraphDataFile() {
 
         try {
-            new TrainRouteGraphImpl.Builder()
+            return new TrainRouteGraphImpl.Builder()
                     .withColumnDelimiter(columnDelimiter)
                     .withInputStream(new FileInputStream(graphDataFileName))
                     .build();
@@ -167,8 +167,6 @@ public class TrainGuideCliInterface {
         try {
             output += Integer.toString(trainRoute.getRoutesByNumberOfStops(
                     chunks[0].trim(), chunks[1].trim(), maxNumStops).size());
-        } catch (IllegalArgumentException e) {
-            output += "NO SUCH ROUTE";
         } catch (Exception e) {
             output += e.getMessage();
         }
@@ -241,7 +239,8 @@ public class TrainGuideCliInterface {
                 shortestDistanceMap = shortestPathCalculator.getShortestPathFromOrigin(trainRoute, origin);
                 lruCache.putItem(origin, shortestDistanceMap);
             }
-            output += shortestDistanceMap.get(origin);
+            Integer dist = shortestDistanceMap.get(destination);
+            output += (dist == null) ? "NO SUCH ROUTE" : dist.toString();
         } catch (Exception e) {
             output += e.getMessage();
         }

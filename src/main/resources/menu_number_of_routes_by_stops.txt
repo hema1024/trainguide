@@ -2,5 +2,5 @@
 Number of different routes between two towns,
 by number of stops
 ----------------------------------------------
-Enter the (1) origin station (2) destination station (3) max. number of stops.
+Enter the (1) origin station (2) destination station (3) max. number of stops
 Separate each part with a comma.  For example "A,E,5":

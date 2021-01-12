@@ -1,13 +1,6 @@
 package com.ethic.trainguide;
 
-import com.ethic.trainguide.domain.TrainRoute;
-import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
-import com.ethic.trainguide.factory.TrainGuideFactory;
 import org.apache.commons.cli.*;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 public class TrainGuide {
 
