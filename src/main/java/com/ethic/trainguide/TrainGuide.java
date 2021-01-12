@@ -12,12 +12,12 @@ public class TrainGuide {
     /**
      * class to print usage and parse command line arguments
      */
-    private static class CommandLineParser {
+    public static class CommandLineParser {
         private static CommandLine commandLine;
-        private static final String OPTION_ROUTE_GRAPH_FILE = "routeGraphFile";
-        private static final String OPTION_DELIMITER = "delimiter";
-        private static final String DEFAULT_DELIMITER = ",";
-        private static Options options;
+        public static final String OPTION_ROUTE_GRAPH_FILE = "routeGraphFile";
+        public static final String OPTION_DELIMITER = "delimiter";
+        public static final String DEFAULT_DELIMITER = ",";
+        private static final Options options;
 
         static {
             options = getOptions();
@@ -27,7 +27,7 @@ public class TrainGuide {
          * Get all command line options supported by this application
          * @return
          */
-        private static Options getOptions() {
+        public static Options getOptions() {
             if (options != null) {
                 return options;
             }
@@ -47,7 +47,7 @@ public class TrainGuide {
          * @param args
          * @throws ParseException
          */
-        private static void parseArguments(String[] args) throws ParseException {
+        public static void parseArguments(String[] args) throws ParseException {
             commandLine = new DefaultParser().parse(options, args);
 
             if (!commandLine.hasOption(OPTION_ROUTE_GRAPH_FILE)) {
@@ -55,11 +55,11 @@ public class TrainGuide {
             }
         }
 
-        private static String getOptionRouteGraphFile() {
+        public static String getOptionRouteGraphFile() {
             return commandLine.getOptionValue(OPTION_ROUTE_GRAPH_FILE);
         }
 
-        private static String getDelimiter() {
+        public static String getDelimiter() {
             if(commandLine.hasOption(OPTION_DELIMITER)) {
                 return commandLine.getOptionValue(OPTION_DELIMITER);
             } else {

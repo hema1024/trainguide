@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-public class TrainRouteGraphImpl_GetRoutesByNumberOfStopsTest extends TrainGuideTestBase {
+public class TrainRouteGraphImpl_GetRoutesByStopsTest extends TrainGuideTestBase {
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetRoutesByNumberOfStops_ForNullOrigin() throws CannotBuildTrainRouteException {
