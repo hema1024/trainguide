@@ -11,6 +11,7 @@ public class CommandLineParserTest extends TrainGuideTestBase {
     public void testGetOptions() {
         assertTrue(TrainGuide.CommandLineParser.getOptions().hasOption(TrainGuide.CommandLineParser.OPTION_ROUTE_GRAPH_FILE));
         assertTrue(TrainGuide.CommandLineParser.getOptions().hasOption(TrainGuide.CommandLineParser.OPTION_DELIMITER));
+        assertTrue(TrainGuide.CommandLineParser.getOptions().hasOption(TrainGuide.CommandLineParser.OPTION_HELP));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -21,6 +22,7 @@ public class CommandLineParserTest extends TrainGuideTestBase {
         };
 
         TrainGuide.CommandLineParser.parseArguments(args);
+        TrainGuide.CommandLineParser.validateArguments();
     }
 
     @Test

@@ -16,6 +16,7 @@ public class TrainGuide {
         private static CommandLine commandLine;
         public static final String OPTION_ROUTE_GRAPH_FILE = "routeGraphFile";
         public static final String OPTION_DELIMITER = "delimiter";
+        public static final String OPTION_HELP = "help";
         public static final String DEFAULT_DELIMITER = ",";
         private static final Options options;
 
@@ -37,6 +38,7 @@ public class TrainGuide {
             // add the command line options
             options.addOption(OPTION_ROUTE_GRAPH_FILE, true, "Path to the file containing train routes in graph format.  There should be one line per route, with 3 delimited columns.  Expected format per line : origin<DELIM>destination<DELIM>distance. (mandatory)");
             options.addOption(OPTION_DELIMITER, true, "Delimiter that seprates the 3 columns in the input file (optional, default comma)");
+            options.addOption(OPTION_HELP, false, "Display this help");
 
             return options;
         }
@@ -49,7 +51,9 @@ public class TrainGuide {
          */
         public static void parseArguments(String[] args) throws ParseException {
             commandLine = new DefaultParser().parse(options, args);
+        }
 
+        public static void validateArguments() {
             if (!commandLine.hasOption(OPTION_ROUTE_GRAPH_FILE)) {
                 throw new IllegalArgumentException(String.format("%s is required", OPTION_ROUTE_GRAPH_FILE));
             }
@@ -57,6 +61,10 @@ public class TrainGuide {
 
         public static String getOptionRouteGraphFile() {
             return commandLine.getOptionValue(OPTION_ROUTE_GRAPH_FILE);
+        }
+
+        public static boolean hasOptionHelp() {
+            return commandLine.hasOption(OPTION_HELP);
         }
 
         public static String getDelimiter() {
@@ -69,6 +77,12 @@ public class TrainGuide {
 
     }
 
+    public static void printUsage(int exitStatus) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp(TrainGuide.class.toString(), CommandLineParser.getOptions());
+        System.exit(exitStatus);
+    }
+
     /**
      * Entry point
      * @param args
@@ -77,11 +91,14 @@ public class TrainGuide {
 
         try {
             CommandLineParser.parseArguments(args);
+            if (CommandLineParser.hasOptionHelp()) {
+                printUsage(0);
+            }
+
+            CommandLineParser.validateArguments();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp(TrainGuide.class.toString(), CommandLineParser.getOptions());
-            System.exit(-1);
+            printUsage(-1);
         }
 
         TrainGuideCli cliInterface = TrainGuideFactory.getTrainGuideCli(

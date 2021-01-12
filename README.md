@@ -1,5 +1,19 @@
 # TRAIN GUIDE 
 
+## Command Line Usage
+
+```
+usage: class com.ethic.trainguide.TrainGuide
+ -delimiter <arg>        Delimiter that seprates the 3 columns in the
+                         input file (optional, default comma)
+ -help                   Display this help
+ -routeGraphFile <arg>   Path to the file containing train routes in graph
+                         format.  There should be one line per route, with
+                         3 delimited columns.  Expected format per line :
+                         origin<DELIM>destination<DELIM>distance.
+                         (mandatory)
+```
+                         
 ## Graph Data File
 The example provided in the exercise is available as a file under trainguide/src/main/resources/sample_data
 
@@ -102,4 +116,4 @@ When passing in initial/max memory (-Xms and -Xmx) the following should be taken
     and the default cache size is 50 elements.  Additional memory should be given if the cache capacity is increased.  
 Note: If you are only testing with a few hundred lines, then the default jvm -Xmx value (which is 1/4th of physical memory) should be sufficient. 
 
-* The command line client interface is single threaded, so only person can interact with an instance of the process/application at a time.
+* The command line client interface is single threaded, so only one person can interact with an instance of the process/application at a time.
