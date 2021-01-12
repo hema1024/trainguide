@@ -20,17 +20,16 @@ import static com.ethic.trainguide.Menu.*;
 
 /**
  * class for printing options/questions on command line interface,
- * taking user input and printing results
+ * taking user input and printing results.
  */
 public class TrainGuideCliCommandLineImpl implements TrainGuideCli {
 
     private static String OUTPUT_PREFIX = "ANSWER : ";
-    private String graphDataFileName;
-    private String columnDelimiter;
-    private TrainRoute trainRoute;
-    private LRUCache<String, Map<String, Integer>> lruCache;
-    private Scanner scanner;
-    private ShortestPathCalculator shortestPathCalculator;
+
+    private final TrainRoute trainRoute;
+    private final LRUCache<String, Map<String, Integer>> lruCache;
+    private final Scanner scanner;
+    private final ShortestPathCalculator shortestPathCalculator;
 
 
     public TrainGuideCliCommandLineImpl(String graphDataFileName, String columnDelimiter) {
@@ -38,8 +37,9 @@ public class TrainGuideCliCommandLineImpl implements TrainGuideCli {
             throw new IllegalArgumentException("graphDataFileName/columnDelimiter must not be null");
         }
 
-        this.graphDataFileName = graphDataFileName;
-        this.columnDelimiter = columnDelimiter;
+        // read the input file and prepare train route graph object
+        // to answer the questions
+        trainRoute = newTrainRouteFromGraphDataFile(graphDataFileName, columnDelimiter);
         this.scanner = new Scanner(System.in);
         this.lruCache = TrainGuideFactory.getLRUCache();
         this.shortestPathCalculator = TrainGuideFactory.getShortestPathCalculator();
@@ -62,13 +62,14 @@ public class TrainGuideCliCommandLineImpl implements TrainGuideCli {
     /**
      * Load graph data file into a TrainRoute object
      * @return
+     * @param graphDataFileName
+     * @param columnDelimiter
      */
-    private TrainRoute newTrainRouteFromGraphDataFile() {
+    private TrainRoute newTrainRouteFromGraphDataFile(String graphDataFileName, String columnDelimiter) {
 
         try {
             return TrainGuideFactory.newTrainRoute(
-                    new FileInputStream(graphDataFileName),
-                    columnDelimiter);
+                    new FileInputStream(graphDataFileName), columnDelimiter);
 
         } catch (IOException e) {
             System.out.println("Error opening input file : " + e.getMessage());
@@ -89,10 +90,6 @@ public class TrainGuideCliCommandLineImpl implements TrainGuideCli {
      */
     @Override
     public void run() {
-
-        // read the input file and prepare train route graph object
-        // to answer the questions
-        trainRoute = newTrainRouteFromGraphDataFile();
 
         // print the main menu and process the selections
         String menuText = getMenuText(MAIN_MENU_RESOURCE_FILE);
@@ -276,7 +273,6 @@ public class TrainGuideCliCommandLineImpl implements TrainGuideCli {
 
         String chunks[] = new String[]{};
         String userInput = "y";
-        int maxDistance = 0;
         // validate and loop until user wants to continue
         // if there is an error in input
         while(userInput.equalsIgnoreCase("y")) {

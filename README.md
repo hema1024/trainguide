@@ -77,9 +77,10 @@ mvn test
 
 * The data in the provided graph input file is valid
 
-The edge distance of bi-directional routes between two adjacent stations will be the same.  
+    * The edge distance of bi-directional routes between two adjacent stations will be the same.  
 For example, if there is a bi-directional route between C and D with edge distance of 8, then both lines representing this route in the file must have a distance of 8.
-(D,C,8 and C,D,8)     
+(D,C,8 and C,D,8)
+    * All lines in the graph file have 3 delimited columns (source, destination, edge-distance).  If there are lesser columns in a line, the program will stop with a load error.      
 
 * Town/Station names provided in the graph are considered their unique identifiers and are case sensitive.
 
