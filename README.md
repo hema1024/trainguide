@@ -1,12 +1,13 @@
 # TRAIN GUIDE 
 
-## Sample Graph Data Files
-There are sample graph data files provided under trainguide/src/main/resources/sample_data
+## Graph Data File
+The example provided in the exercise is available as a file under trainguide/src/main/resources/sample_data
 
-* ethic_sample.csv : example provided by Ethic
-* 
+* ethic_sample.csv : example provided by Ethic 
 
-Graph data file format:
+To input your own custom graph data file, make sure the file conforms to the following syntax.
+
+_Graph data file format:_
 
 Each line should contain one route information about two adjacent stations.  
 For example if the distance between station A and B (adjacent stations) is 5, 
@@ -51,6 +52,7 @@ mvn package
 **_3.  Running the program_**
 
 _Quick start_
+
 To quick start the program with the graph data file provided in the exercise, just execute the following command.
 It will run tests, create the jar file and execute the program.
 ```
@@ -58,6 +60,7 @@ It will run tests, create the jar file and execute the program.
 ``` 
 
 _To start with custom graph file and column delimiter_
+
 To pass in your custom graph data file, execute the following command with your preferred file.
 
 ```
@@ -97,5 +100,6 @@ When passing in initial/max memory (-Xms and -Xmx) the following should be taken
     Additional buffer should be accounted for class/instance variables overhead.
     *  There is a simple LRUCache supported in the application for caching shortest distances from a given origin, 
     and the default cache size is 50 elements.  Additional memory should be given if the cache capacity is increased.  
+Note: If you are only testing with a few hundred lines, then the default jvm -Xmx value (which is 1/4th of physical memory) should be sufficient. 
 
 * The command line client interface is single threaded, so only person can interact with an instance of the process/application at a time.
