@@ -13,6 +13,12 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of TrainRoute, to build a train route
+ * from graph input data and set the route associations.
+ * There is a Builder class that should be used to create an instance
+ * of TrainRouteGraphImpl.  Once created it is immutable.
+ */
 public class TrainRouteGraphImpl implements TrainRoute {
 
     /**
@@ -42,9 +48,16 @@ public class TrainRouteGraphImpl implements TrainRoute {
         return nameToStationMap.get(name);
     }
 
+    /**
+     * Get distance of the given route
+     * @param stationNames list of station names for calculating distance
+     * @return distance of the route
+     * @throws NoSuchRouteException if the provided list does not form a valid route
+     */
     @Override
     public int getDistanceOfRoute(List<String> stationNames) throws NoSuchRouteException {
 
+        // perform input validations
         if(stationNames == null || stationNames.isEmpty()) {
             throw new IllegalArgumentException("stationNames must not be empty");
         }
@@ -56,6 +69,9 @@ public class TrainRouteGraphImpl implements TrainRoute {
 
         int distanceOfRoute = 0;
 
+        // iterate through the names list,
+        // and keep adding distance of the next adjacent station
+        // until we cover all the names in the list.
         if(stationNames.size() > 1) {
             for (int i = 1; i < stationNames.size(); i++) {
                 Map.Entry<Station, Integer> adjacentStationEntry = currentStation.getAdjacentStationByName(stationNames.get(i));
@@ -70,9 +86,18 @@ public class TrainRouteGraphImpl implements TrainRoute {
         return distanceOfRoute;
     }
 
+    /**
+     * Get all the routes between an origin and destination
+     * within a maximum number of stops.
+     * @param originName origin station name
+     * @param destinationName destination station name
+     * @param maxNumerOfStops maximum no. of stops
+     * @return
+     */
     @Override
     public List<List<String>> getRoutesByNumberOfStops(String originName, String destinationName, int maxNumerOfStops) {
 
+        // perform input validation
         if(maxNumerOfStops <= 0) {
             throw new IllegalArgumentException("maxNumerOfStops must at least be 1");
         }
@@ -93,6 +118,9 @@ public class TrainRouteGraphImpl implements TrainRoute {
 
         List<String> routes = new ArrayList();
 
+        // call recursive method to visit all adjacent stations
+        // from a given station that fall with maxStops
+        // and keep adding valid routes to the output
         getRoutesByNumberOfStops(destinationStation,
                 maxNumerOfStops, originStation, -1,
                 "", routes);
@@ -100,6 +128,16 @@ public class TrainRouteGraphImpl implements TrainRoute {
         return reformatRoutes(routes);
     }
 
+    /**
+     * Recursive method to visit all adjacent stations
+     * from a given station, and add all valid routes to the output
+     * @param destination
+     * @param maxNumerOfStops
+     * @param currentStation
+     * @param currentNoOfStops
+     * @param currentRoute
+     * @param routes output list where all the routes are collected
+     */
     private void getRoutesByNumberOfStops(Station destination,
                                           int maxNumerOfStops, Station currentStation,
                                           int currentNoOfStops, String currentRoute,
@@ -127,6 +165,14 @@ public class TrainRouteGraphImpl implements TrainRoute {
         }
     }
 
+    /**
+     * Get all the routes between an origin and destination
+     * within a maximum distance (number not inclusive)
+     * @param originName name of the origin station
+     * @param destinationName name of the destination station
+     * @param maxDistance maximum distance of the route (number not inclusive)
+     * @return
+     */
     @Override
     public List<List<String>> getRoutesByDistance(String originName, String destinationName, int maxDistance) {
         if(maxDistance < 0) {
@@ -149,6 +195,7 @@ public class TrainRouteGraphImpl implements TrainRoute {
 
         List<String> routes = new ArrayList();
 
+        // recursive method to find all routes within the max distance
         getRoutesByDistance(destinationStation,
                 maxDistance, 0, originStation,
                 0, "", routes);
@@ -241,6 +288,11 @@ public class TrainRouteGraphImpl implements TrainRoute {
         }
     }
 
+    /**
+     * Builder class to take input file, and provide the TrainRoute
+     * object with all stations/distances and adjacent station
+     * associations
+     */
     public static class Builder {
 
         private InputStream inputStream;

@@ -6,7 +6,6 @@ import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import com.ethic.trainguide.exception.NoSuchRouteException;
 import com.ethic.trainguide.factory.TrainGuideFactory;
-import com.ethic.trainguide.graph.TrainRouteGraphImpl;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -17,17 +16,14 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import static com.ethic.trainguide.Menu.*;
+
 /**
  * class for printing options/questions on command line interface,
  * taking user input and printing results
  */
 public class TrainGuideCliInterface {
 
-    private static String MAIN_MENU_RESOURCE_FILE = "main_menu.txt";
-    private static String MENU_DISTANCE_ALONG_ROUTE_RESOURCE_FILE = "menu_distance_along_route.txt";
-    private static String MENU_NUMBER_OF_ROUTES_BY_STOPS_RESOURCE_FILE = "menu_number_of_routes_by_stops.txt";
-    private static String MENU_NUMBER_OF_ROUTES_BY_DISTANCE_RESOURCE_FILE = "menu_number_of_routes_by_distance.txt";
-    private static String MENU_SHORTEST_ROUTE_RESOURCE_FILE = "shortest_route.txt";
     private static String OUTPUT_PREFIX = "ANSWER : ";
     private static int LRU_CACHE_CAPACITY = 50;
 
@@ -51,6 +47,12 @@ public class TrainGuideCliInterface {
         this.shortestPathCalculator = TrainGuideFactory.getShortestPathCalculator();
     }
 
+    /**
+     * Get menu and sub-menu text from resource files
+     * as string
+     * @param resourceFileName name of the resouce file
+     * @return contents of the resouce file as a String
+     */
     private String getMenuText(String resourceFileName) {
         InputStream is = getClass().getClassLoader().getResourceAsStream(resourceFileName);
         return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))
@@ -59,6 +61,10 @@ public class TrainGuideCliInterface {
 
     }
 
+    /**
+     * Load graph data file into a TrainRoute object
+     * @return
+     */
     private TrainRoute newTrainRouteFromGraphDataFile() {
 
         try {
@@ -80,6 +86,9 @@ public class TrainGuideCliInterface {
         return null;
     }
 
+    /**
+     * Run the client interface
+     */
     public void run() {
 
         // read the input file and prepare train route graph object
@@ -104,6 +113,37 @@ public class TrainGuideCliInterface {
         }
     }
 
+    /**
+     * Process the selected main menu option
+     * @param option
+     */
+    private void processSelectedOption(int option) {
+
+        switch (option) {
+            case 1:
+                processDistanceAlongRoute();
+                break;
+            case 2:
+                processRoutesByStops();
+                break;
+            case 3:
+                processRoutesByDistance();
+                break;
+            case 4:
+                processShortestDistance();
+                break;
+            case 5:
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid option, please try again.");
+                break;
+        }
+    }
+
+    /**
+     * Process Question 1 (Question A)
+     */
     private void processDistanceAlongRoute() {
 
         String menuText = getMenuText(MENU_DISTANCE_ALONG_ROUTE_RESOURCE_FILE);
@@ -111,6 +151,8 @@ public class TrainGuideCliInterface {
 
         String chunks[] = new String[]{};
         String userInput = "y";
+        // validate and loop until user wants to continue
+        // if there is an error in input
         while(userInput.equalsIgnoreCase("y")) {
             System.out.println(menuText);
             chunks = scanner.nextLine().split(",");
@@ -140,6 +182,10 @@ public class TrainGuideCliInterface {
 
     }
 
+
+    /**
+     * Process Question 2 (Question B1)
+     */
     private void processRoutesByStops() {
 
         String menuText = getMenuText(MENU_NUMBER_OF_ROUTES_BY_STOPS_RESOURCE_FILE);
@@ -147,6 +193,8 @@ public class TrainGuideCliInterface {
         String chunks[] = new String[]{};
         String userInput = "y";
         int maxNumStops = 0;
+        // validate and loop until user wants to continue
+        // if there is an error in input
         while(userInput.equalsIgnoreCase("y")) {
             System.out.println(menuText);
             chunks = scanner.nextLine().split(",");
@@ -179,12 +227,17 @@ public class TrainGuideCliInterface {
 
     }
 
+    /**
+     * Process Question 3 (Question B2)
+     */
     private void processRoutesByDistance() {
         String menuText = getMenuText(MENU_NUMBER_OF_ROUTES_BY_DISTANCE_RESOURCE_FILE);
 
         String chunks[] = new String[]{};
         String userInput = "y";
         int maxDistance = 0;
+        // validate and loop until user wants to continue
+        // if there is an error in input
         while(userInput.equalsIgnoreCase("y")) {
             System.out.println(menuText);
             chunks = scanner.nextLine().split(",");
@@ -216,12 +269,17 @@ public class TrainGuideCliInterface {
         pressEnterToContinue();
     }
 
+    /**
+     * Process Question 4 (Question C)
+     */
     private void processShortestDistance() {
         String menuText = getMenuText(MENU_SHORTEST_ROUTE_RESOURCE_FILE);
 
         String chunks[] = new String[]{};
         String userInput = "y";
         int maxDistance = 0;
+        // validate and loop until user wants to continue
+        // if there is an error in input
         while(userInput.equalsIgnoreCase("y")) {
             System.out.println(menuText);
             chunks = scanner.nextLine().split(",");
@@ -256,34 +314,13 @@ public class TrainGuideCliInterface {
         pressEnterToContinue();
     }
 
+    /**
+     * Wait for user to read the answer, and continue
+     * when enter is pressed
+     */
     private void pressEnterToContinue() {
         System.out.println("Press enter to continue...");
         scanner.nextLine();
     }
-
-    private void processSelectedOption(int option) {
-
-        switch (option) {
-            case 1:
-                processDistanceAlongRoute();
-                break;
-            case 2:
-                processRoutesByStops();
-                break;
-            case 3:
-                processRoutesByDistance();
-                break;
-            case 4:
-                processShortestDistance();
-                break;
-            case 5:
-                System.exit(0);
-                break;
-            default:
-                System.out.println("Invalid option, please try again.");
-                break;
-        }
-    }
-
 
 }

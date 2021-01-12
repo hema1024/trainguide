@@ -2,8 +2,15 @@ package com.ethic.trainguide;
 
 import org.apache.commons.cli.*;
 
+/**
+ * Main entry point of the application
+ *
+ */
 public class TrainGuide {
 
+    /**
+     * class to print usage and parse command line arguments
+     */
     private static class CommandLineParser {
         private static CommandLine commandLine;
         private static final String OPTION_ROUTE_GRAPH_FILE = "routeGraphFile";
@@ -15,6 +22,10 @@ public class TrainGuide {
             options = getOptions();
         }
 
+        /**
+         * Get all command line options supported by this application
+         * @return
+         */
         private static Options getOptions() {
             if (options != null) {
                 return options;
@@ -29,6 +40,12 @@ public class TrainGuide {
             return options;
         }
 
+        /**
+         * Parse arguments passed in the command line
+         * and validate
+         * @param args
+         * @throws ParseException
+         */
         private static void parseArguments(String[] args) throws ParseException {
             commandLine = new DefaultParser().parse(options, args);
 
@@ -51,6 +68,10 @@ public class TrainGuide {
 
     }
 
+    /**
+     * Entry point
+     * @param args
+     */
     public static void main(String[] args) {
 
         try {

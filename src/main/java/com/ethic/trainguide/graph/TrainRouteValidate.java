@@ -3,6 +3,9 @@ package com.ethic.trainguide.graph;
 import com.ethic.trainguide.domain.TrainRoute;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * helper/utility class for some validations
+ */
 public class TrainRouteValidate {
 
     public static void validateTrainRoute(TrainRoute trainRoute) {
