@@ -6,17 +6,21 @@ import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import org.junit.Test;
 
+import java.io.FileInputStream;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
 
-public class TrainRouteFromFileBuilderImplTest extends TrainGuideTestBase {
+public class TrainRouteGraphImpl_BuilderTest extends TrainGuideTestBase {
 
     @Test
     public void testBuildTrainRouteGraph() throws CannotBuildTrainRouteException {
 
         TrainRoute expectedTrainRoute = getAValidTrainRoute();
-        TrainRoute trainRoute = new TrainRouteFromInputStreamBuilderImpl(asInputStream(expectedTrainRoute)).build();
+        TrainRoute trainRoute = new TrainRouteGraphImpl.Builder()
+                .withColumnDelimiter(",")
+                .withInputStream(asInputStream(expectedTrainRoute))
+                .build();
 
         Set<Station> stations = trainRoute.getStations();
 
@@ -38,12 +42,24 @@ public class TrainRouteFromFileBuilderImplTest extends TrainGuideTestBase {
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidInput_ForInputStream() throws CannotBuildTrainRouteException {
-        new TrainRouteFromInputStreamBuilderImpl(null).build();
+        new TrainRouteGraphImpl.Builder()
+                .withColumnDelimiter(",")
+                .withInputStream(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidInput_ForColumnDelimiter() throws CannotBuildTrainRouteException {
+        new TrainRouteGraphImpl.Builder()
+                .withColumnDelimiter("")
+                .withInputStream(getResourceAsInputStream("test_data_valid.txt"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidInput_ForDistance() throws CannotBuildTrainRouteException {
-        new TrainRouteFromInputStreamBuilderImpl(asInputStream(getAnIValidTrainRoute())).build();
+        new TrainRouteGraphImpl.Builder()
+                .withColumnDelimiter(",")
+                .withInputStream(getResourceAsInputStream("test_data_invalid.txt"))
+                .build();
     }
 
 }

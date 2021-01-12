@@ -3,8 +3,6 @@ package com.ethic.trainguide;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import com.ethic.trainguide.factory.TrainGuideFactory;
-import com.ethic.trainguide.graph.TrainRouteBuilder;
-import com.ethic.trainguide.graph.TrainRouteFromInputStreamBuilder;
 import org.apache.commons.cli.*;
 
 import java.io.BufferedReader;

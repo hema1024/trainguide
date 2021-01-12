@@ -5,6 +5,7 @@ import com.ethic.trainguide.calculate.ShortestPathCalculator;
 import com.ethic.trainguide.calculate.ShortestPathCalculatorDijkstraImpl;
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
+import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import com.ethic.trainguide.exception.NoSuchStationException;
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 public class ShortestPathDijkstraImplTest extends TrainGuideTestBase {
 
     @Test
-    public void testGetShortestPath() throws NoSuchStationException {
+    public void testGetShortestPath() throws NoSuchStationException, CannotBuildTrainRouteException {
         TrainRoute trainRoute = getAValidTrainRoute();
 
         ShortestPathCalculator shortestPath = new ShortestPathCalculatorDijkstraImpl();
@@ -29,7 +30,7 @@ public class ShortestPathDijkstraImplTest extends TrainGuideTestBase {
     }
 
     @Test(expected = NoSuchStationException.class)
-    public void testGetShortestPath_ForInvalidStation1() throws NoSuchStationException {
+    public void testGetShortestPath_ForInvalidStation1() throws NoSuchStationException, CannotBuildTrainRouteException {
         TrainRoute trainRoute = getAValidTrainRoute();
 
         ShortestPathCalculator shortestPath = new ShortestPathCalculatorDijkstraImpl();
@@ -37,7 +38,7 @@ public class ShortestPathDijkstraImplTest extends TrainGuideTestBase {
     }
 
     @Test(expected = NoSuchStationException.class)
-    public void testGetShortestPath_ForInvalidStation2() throws NoSuchStationException {
+    public void testGetShortestPath_ForInvalidStation2() throws NoSuchStationException, CannotBuildTrainRouteException {
         TrainRoute trainRoute = getAValidTrainRoute();
 
         ShortestPathCalculator shortestPath = new ShortestPathCalculatorDijkstraImpl();

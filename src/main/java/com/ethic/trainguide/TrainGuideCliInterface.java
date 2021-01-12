@@ -6,7 +6,7 @@ import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import com.ethic.trainguide.exception.NoSuchRouteException;
 import com.ethic.trainguide.factory.TrainGuideFactory;
-import com.ethic.trainguide.graph.TrainRouteBuilder;
+import com.ethic.trainguide.graph.TrainRouteGraphImpl;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -59,14 +59,13 @@ public class TrainGuideCliInterface {
 
     }
 
-    private TrainRoute newTrainRouteObjectFromGraphDataFile() {
+    private TrainRoute newTrainRouteFromGraphDataFile() {
 
         try {
-            TrainRouteBuilder trainRouteBuilder = TrainGuideFactory.newTrainRouteFromInputStreamBuilder(
-                    new FileInputStream(graphDataFileName), columnDelimiter);
-
-            return trainRouteBuilder.build();
-
+            new TrainRouteGraphImpl.Builder()
+                    .withColumnDelimiter(columnDelimiter)
+                    .withInputStream(new FileInputStream(graphDataFileName))
+                    .build();
         } catch (IOException e) {
             System.out.println("Error opening input file : " + e.getMessage());
             System.exit(-1);
@@ -85,7 +84,7 @@ public class TrainGuideCliInterface {
 
         // read the input file and prepare train route graph object
         // to answer the questions
-        trainRoute = newTrainRouteObjectFromGraphDataFile();
+        trainRoute = newTrainRouteFromGraphDataFile();
 
         // print the main menu and process the selections
         String menuText = getMenuText(MAIN_MENU_RESOURCE_FILE);

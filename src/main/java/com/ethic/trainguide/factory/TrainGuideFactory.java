@@ -5,8 +5,7 @@ import com.ethic.trainguide.cache.LRUCacheLinkedHashMapImpl;
 import com.ethic.trainguide.calculate.ShortestPathCalculator;
 import com.ethic.trainguide.calculate.ShortestPathCalculatorDijkstraImpl;
 import com.ethic.trainguide.domain.TrainRoute;
-import com.ethic.trainguide.graph.TrainRouteBuilder;
-import com.ethic.trainguide.graph.TrainRouteFromInputStreamBuilderImpl;
+import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import com.ethic.trainguide.graph.TrainRouteGraphImpl;
 
 import java.io.InputStream;
@@ -21,12 +20,11 @@ public class TrainGuideFactory {
     private static ShortestPathCalculator shortestPathCalculator = null;
     private static LRUCache<String, Map<String, Integer>> lruCache = null;
 
-    public static TrainRouteBuilder newTrainRouteFromInputStreamBuilder(InputStream inputStream, String columnDelimiter) {
-        return new TrainRouteFromInputStreamBuilderImpl(inputStream, columnDelimiter);
-    }
-
-    public static TrainRoute newTrainRoute() {
-        return new TrainRouteGraphImpl();
+    public static TrainRoute newTrainRoute(InputStream inputStream, String columnDelimiter) throws CannotBuildTrainRouteException {
+        return new TrainRouteGraphImpl.Builder()
+                .withColumnDelimiter(",")
+                .withInputStream(inputStream)
+                .build();
     }
 
     /**

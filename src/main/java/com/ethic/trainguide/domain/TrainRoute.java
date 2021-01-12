@@ -10,8 +10,6 @@ import java.util.Set;
 
 public interface TrainRoute {
 
-    public void addStation(Station station);
-
     public Set<Station> getStations();
 
     /**

@@ -2,9 +2,14 @@ package com.ethic.trainguide.graph;
 
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
+import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import com.ethic.trainguide.exception.NoSuchRouteException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,26 +18,18 @@ public class TrainRouteGraphImpl implements TrainRoute {
     /**
      * Set to store all stations in the route graph
      */
-    private Set<Station> stations = new HashSet();
+    private Set<Station> stations;
 
     /**
      * A convenience map to store name to station object
      */
-    private HashMap<String, Station> nameToStationMap = new HashMap();
+    private Map<String, Station> nameToStationMap;
 
     private static final String DELIMITER = "\t";
 
-    public void TrainRouteGraph() {
-    }
-
-    @Override
-    public void addStation(Station station) {
-        if(station == null) {
-            throw new IllegalArgumentException("vertex must not be null");
-        }
-
-        stations.add(station);
-        nameToStationMap.put(station.getName(), station);
+    private TrainRouteGraphImpl(Builder builder) {
+        this.stations = builder.stations;
+        this.nameToStationMap = builder.nameToStationMap;
     }
 
     @Override
@@ -220,4 +217,135 @@ public class TrainRouteGraphImpl implements TrainRoute {
         return StringUtils.join(routes, "\n");
     }
 
+    private static class OneStop {
+        private String origin;
+        private String destination;
+        private int distance;
+
+        public OneStop(String origin, String destination, int distance) {
+            this.origin = origin;
+            this.destination = destination;
+            this.distance = distance;
+        }
+
+        public String getOrigin() {
+            return origin;
+        }
+
+        public String getDestination() {
+            return destination;
+        }
+
+        public int getDistance() {
+            return distance;
+        }
+    }
+
+    public static class Builder {
+
+        private InputStream inputStream;
+        private String columnDelimiter = DEFAULT_DELIMITER;
+        private static final String DEFAULT_DELIMITER = ",";
+        private Map<String, Station> nameToStationMap;
+        private Set<Station> stations;
+
+
+        public Builder() {
+        }
+
+        public Builder withInputStream(InputStream inputStream) {
+            if(inputStream == null) {
+                throw new IllegalArgumentException("inputStream must not be null");
+            }
+
+            this.inputStream = inputStream;
+            return this;
+        }
+
+        public Builder withColumnDelimiter(String columnDelimiter) {
+            if(StringUtils.isEmpty(columnDelimiter)) {
+                throw new IllegalArgumentException("columnDelimiter must not be null");
+            }
+
+            this.columnDelimiter = columnDelimiter;
+            return this;
+        }
+
+        public TrainRoute build() throws CannotBuildTrainRouteException {
+
+            nameToStationMap = buildStations();
+            stations = new HashSet();
+
+            // add all stations to the train route graph
+            for(Station station : nameToStationMap.values()) {
+                stations.add(station);
+            }
+
+            return new TrainRouteGraphImpl(this);
+        }
+
+        private Map<String, Station> buildStations() throws CannotBuildTrainRouteException {
+            BufferedReader reader = null;
+            Map<String, Station> nameToStationMap = new HashMap();
+
+            int lineNumber = 0;
+            try {
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = null;
+
+                while ((line = reader.readLine()) != null) {
+                    lineNumber++;
+                    addDestinationToSourceStation(nameToStationMap, parseOneStop(line, lineNumber));
+                }
+            } catch (IOException e) {
+                throw new CannotBuildTrainRouteException(e);
+            }
+
+            return nameToStationMap;
+        }
+
+
+        private void addDestinationToSourceStation(Map<String, Station> nameToStationMap, OneStop oneStop) {
+
+            // check if we already processed this station before
+            // if yes, use the same object to add new destination information
+            Station origin = nameToStationMap.get(oneStop.getOrigin());
+            Station destination = nameToStationMap.get(oneStop.getDestination());
+
+            if(origin == null) {
+                origin = new Station(oneStop.getOrigin());
+                nameToStationMap.put(oneStop.getOrigin(), origin);
+            }
+
+            if(destination == null) {
+                destination = new Station(oneStop.getDestination());
+                nameToStationMap.put(oneStop.getDestination(), destination);
+            }
+
+            origin.addAdjacentStation(destination, oneStop.getDistance());
+        }
+
+        /**
+         * method to parse origin and destination stations
+         * and the distance between them from the data file.
+         * @param line represents a one stop route, expected format "<origin>-<destination>-<distance>"
+         * @return
+         */
+        private OneStop parseOneStop(String line, int lineNumber) {
+            String[] chunks = line.split(columnDelimiter);
+            if(chunks.length < 3) {
+                throw new IllegalArgumentException(
+                        String.format("Error on line %d ('%s').  Expected 3 columns, found %d",
+                                lineNumber, line, chunks.length));
+            }
+
+            return new OneStop(
+                    chunks[0],
+                    chunks[1],
+                    Integer.parseInt(chunks[2])
+            );
+
+        }
+
+    }
 }
