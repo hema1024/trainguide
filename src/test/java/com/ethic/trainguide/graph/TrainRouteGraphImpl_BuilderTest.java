@@ -6,7 +6,6 @@ import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import org.junit.Test;
 
-import java.io.FileInputStream;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;

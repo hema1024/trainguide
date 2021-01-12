@@ -1,26 +1,26 @@
 package com.ethic.trainguide.domain;
 
-import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.exception.NoSuchRouteException;
-import com.ethic.trainguide.exception.NoSuchStationException;
-
-import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
 public interface TrainRoute {
 
+    /**
+     * Get all the stations in this train route graph
+     * @return
+     */
     public Set<Station> getStations();
 
     /**
-     * Method to find the station object, given its name
+     * Find the station object, given its name
      * @param name
      * @return
      */
     public Station getStationByName(String name);
 
     /**
-     * Method to find the distance of a route,
+     * Find the distance of a route,
      * provided the list of stations in the route.
      * @param stationNames
      * @return
@@ -29,7 +29,7 @@ public interface TrainRoute {
     public int getDistanceOfRoute(List<String> stationNames) throws NoSuchRouteException;
 
     /**
-     * Method to find the number of different routes between two stations,
+     * Find the number of different routes between two stations,
      * having a maximum of N stops.
      * @return
      */
@@ -37,7 +37,7 @@ public interface TrainRoute {
 
 
     /**
-     * Method to find routes between two stations,
+     * Find routes between two stations,
      * lesser than given distance.
      * @param originName
      * @param destinationName

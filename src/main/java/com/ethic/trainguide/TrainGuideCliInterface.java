@@ -1,7 +1,7 @@
 package com.ethic.trainguide;
 
 import com.ethic.trainguide.cache.LRUCache;
-import com.ethic.trainguide.calculate.ShortestPathCalculator;
+import com.ethic.trainguide.graph.ShortestPathCalculator;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import com.ethic.trainguide.exception.NoSuchRouteException;
@@ -62,10 +62,10 @@ public class TrainGuideCliInterface {
     private TrainRoute newTrainRouteFromGraphDataFile() {
 
         try {
-            return new TrainRouteGraphImpl.Builder()
-                    .withColumnDelimiter(columnDelimiter)
-                    .withInputStream(new FileInputStream(graphDataFileName))
-                    .build();
+            return TrainGuideFactory.newTrainRoute(
+                    new FileInputStream(graphDataFileName),
+                    columnDelimiter);
+
         } catch (IOException e) {
             System.out.println("Error opening input file : " + e.getMessage());
             System.exit(-1);
@@ -136,6 +136,8 @@ public class TrainGuideCliInterface {
 
         System.out.println(output);
 
+        pressEnterToContinue();
+
     }
 
     private void processRoutesByStops() {
@@ -173,6 +175,8 @@ public class TrainGuideCliInterface {
 
         System.out.println(output);
 
+        pressEnterToContinue();
+
     }
 
     private void processRoutesByDistance() {
@@ -208,6 +212,8 @@ public class TrainGuideCliInterface {
         }
 
         System.out.println(output);
+
+        pressEnterToContinue();
     }
 
     private void processShortestDistance() {
@@ -246,6 +252,13 @@ public class TrainGuideCliInterface {
         }
 
         System.out.println(output);
+
+        pressEnterToContinue();
+    }
+
+    private void pressEnterToContinue() {
+        System.out.println("Press enter to continue...");
+        scanner.nextLine();
     }
 
     private void processSelectedOption(int option) {

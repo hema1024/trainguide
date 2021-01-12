@@ -3,4 +3,4 @@ Number of different routes between two towns,
 within a maximum distance
 ----------------------------------------------
 Enter the (1) origin station (2) destination station (3) maximum distance (less than)
-Separate each part with a comma.  For example "A,E,5":
+Separate each part with a comma.  For example "A,E,9":

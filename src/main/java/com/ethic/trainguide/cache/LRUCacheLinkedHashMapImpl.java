@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * A simple LRU cache implemented using LinkedHashMap to
  * cache train routes with shortest paths computed,
- * so we dont have to recompute the shortest paths
+ * so we don't have to recompute the shortest paths
  * if the origin station is the same
  * @param <K>
  * @param <V>
@@ -37,5 +37,10 @@ public class LRUCacheLinkedHashMapImpl<K, V> extends LinkedHashMap<K, V> impleme
     @Override
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    @Override
+    public int getCapacity() {
+        return this.capacity;
     }
 }

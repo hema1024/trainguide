@@ -7,13 +7,14 @@ import java.util.*;
 /**
  * class to store information
  * about a train station.
- * This will be vertices in the graph.
+ * Station objects will be vertices in the graph.
  */
 public class Station {
 
     /**
      * Name of the station.
      * This is also the unique ID, that identifies a station.
+     * Equality of two Station objects is based on the name.
      */
     private String name;
 
@@ -40,6 +41,11 @@ public class Station {
         return adjacentStations;
     }
 
+    /**
+     * Add a station as a adjacent to this station object
+     * @param adjacentStation adjacent station object.  IllegalArgumentException if null/empty.
+     * @param distance distance to the adjacent station.  IllegalArgumentException if < 0.
+     */
     public void addAdjacentStation(Station adjacentStation, Integer distance) {
         if(adjacentStation == null) {
             throw new IllegalArgumentException("adjacentStation must not be null");
@@ -52,6 +58,11 @@ public class Station {
         adjacentStations.put(adjacentStation, distance);
     }
 
+    /**
+     * Given a name returns the adjacent station object with that name.
+     * @param name name of the adjacent station
+     * @return null if not such station, else the station object
+     */
     public Map.Entry<Station, Integer>  getAdjacentStationByName(String name) {
 
         for(Map.Entry<Station, Integer> entry : getAdjacentStations().entrySet()) {

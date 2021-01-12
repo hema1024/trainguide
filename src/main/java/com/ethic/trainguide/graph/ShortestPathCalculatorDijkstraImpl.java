@@ -1,14 +1,21 @@
-package com.ethic.trainguide.calculate;
+package com.ethic.trainguide.graph;
 
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.NoSuchStationException;
+import com.ethic.trainguide.graph.ShortestPathCalculator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
 import static com.ethic.trainguide.graph.TrainRouteValidate.validateTrainRoute;
 
+/**
+ * Implementation of shortest path from origin station to the rest of the stations
+ * in the TrainRoute object.  This implementation uses the Dijkstra's algorithm for
+ * finding the shortest path.
+ * Time complexity : 
+ */
 public class ShortestPathCalculatorDijkstraImpl implements ShortestPathCalculator {
 
     @Override
