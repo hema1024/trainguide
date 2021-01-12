@@ -1,6 +1,7 @@
 package com.ethic.trainguide;
 
 import com.ethic.trainguide.cache.LRUCache;
+import com.ethic.trainguide.calculate.ShortestPathCalculator;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import com.ethic.trainguide.exception.NoSuchRouteException;
@@ -12,6 +13,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -32,8 +34,9 @@ public class TrainGuideCliInterface {
     private String graphDataFileName;
     private String columnDelimiter;
     private TrainRoute trainRoute;
-    private LRUCache<String, TrainRoute> lruCache;
+    private LRUCache<String, Map<String, Integer>> lruCache;
     private Scanner scanner;
+    private ShortestPathCalculator shortestPathCalculator;
 
 
     public TrainGuideCliInterface(String graphDataFileName, String columnDelimiter) {
@@ -45,6 +48,7 @@ public class TrainGuideCliInterface {
         this.columnDelimiter = columnDelimiter;
         this.scanner = new Scanner(System.in);
         this.lruCache = TrainGuideFactory.getLRUCache(LRU_CACHE_CAPACITY);
+        this.shortestPathCalculator = TrainGuideFactory.getShortestPathCalculator();
     }
 
     private String getMenuText(String resourceFileName) {
@@ -231,14 +235,14 @@ public class TrainGuideCliInterface {
 
         // check in cache if we have shortest route calculated
         // for this origin station before
-        TrainRoute trainRoute = lruCache.getItem(origin);
-        if(trainRoute == null) {
-            trainRoute = newTrainRouteObjectFromGraphDataFile();
-            lruCache.putItem(origin, trainRoute);
-        }
+        Map<String, Integer> shortestDistanceMap = lruCache.getItem(origin);
 
         try {
-            output += trainRoute.getShortestDistance(origin, destination);
+            if(shortestDistanceMap == null) {
+                shortestDistanceMap = shortestPathCalculator.getShortestPathFromOrigin(trainRoute, origin);
+                lruCache.putItem(origin, shortestDistanceMap);
+            }
+            output += shortestDistanceMap.get(origin);
         } catch (Exception e) {
             output += e.getMessage();
         }

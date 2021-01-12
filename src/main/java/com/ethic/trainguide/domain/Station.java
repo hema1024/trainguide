@@ -18,13 +18,6 @@ public class Station {
     private String name;
 
     /**
-     * Distance from origin will be set only
-     * after a call to some shortest path algorithm.
-     * Until then this will be Integer.MAX_VALUE
-     */
-    private Integer distanceFromOrigin;
-
-    /**
      * Map to store adjacent stations to this station.
      * The map value is the distance between this station
      * and the adjacent station.
@@ -37,23 +30,10 @@ public class Station {
         }
 
         this.name = name;
-        this.distanceFromOrigin = Integer.MAX_VALUE;
     }
 
     public String getName() {
         return name;
-    }
-
-    public Integer getDistanceFromOrigin() {
-        return distanceFromOrigin;
-    }
-
-    public void setDistanceFromOrigin(int distanceFromOrigin) {
-        if(distanceFromOrigin < 0) {
-            throw new IllegalArgumentException("distanceFromOrigin must be >= 0");
-        }
-
-        this.distanceFromOrigin = distanceFromOrigin;
     }
 
     public Map<Station, Integer> getAdjacentStations() {

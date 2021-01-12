@@ -1,11 +1,8 @@
 package com.ethic.trainguide.graph;
 
-import com.ethic.trainguide.calculate.ShortestPath;
 import com.ethic.trainguide.domain.Station;
 import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.NoSuchRouteException;
-import com.ethic.trainguide.exception.NoSuchStationException;
-import com.ethic.trainguide.factory.TrainGuideFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -13,23 +10,17 @@ import java.util.stream.Collectors;
 
 public class TrainRouteGraphImpl implements TrainRoute {
 
+    /**
+     * Set to store all stations in the route graph
+     */
     private Set<Station> stations = new HashSet();
-    private static final String DELIMITER = "\t";
 
     /**
-     * the origin station from which
-     * shortest path information is calculate
-     * and set in all other station objects.
-     * When the object is created, this is null, meaning
-     * there shortest path info is not available
-     * for any stations.
-     * In the first call to getShortestDistance()
-     * the shortest distance is computed based on the origin
-     * passed in.  After that, an instance of this object
-     * can only be used for getting shortest distance for the same
-     * origin station.
+     * A convenience map to store name to station object
      */
-    private String shortestPathOriginStation = null;
+    private HashMap<String, Station> nameToStationMap = new HashMap();
+
+    private static final String DELIMITER = "\t";
 
     public void TrainRouteGraph() {
     }
@@ -41,6 +32,7 @@ public class TrainRouteGraphImpl implements TrainRoute {
         }
 
         stations.add(station);
+        nameToStationMap.put(station.getName(), station);
     }
 
     @Override
@@ -50,12 +42,7 @@ public class TrainRouteGraphImpl implements TrainRoute {
 
     @Override
     public Station getStationByName(String name) {
-        Optional<Station> station = getStations()
-                .stream()
-                .filter(s -> s.getName().equalsIgnoreCase(name))
-                .findFirst();
-
-        return station.orElse(null);
+        return nameToStationMap.get(name);
     }
 
     @Override
@@ -170,34 +157,6 @@ public class TrainRouteGraphImpl implements TrainRoute {
                 0, "", routes);
 
         return reformatRoutes(routes);
-    }
-
-    @Override
-    public int getShortestDistance(String origin, String destination) throws NoSuchStationException {
-
-        if(StringUtils.isEmpty(origin) || StringUtils.isEmpty(destination)) {
-            throw new IllegalArgumentException("origin/destination stations names must not be null");
-        }
-
-        Station originStation = getStationByName(origin);
-        Station destinationStation = getStationByName(destination);
-
-        if(originStation == null || destinationStation == null) {
-            throw new NoSuchStationException(String.format("No such origin/destination station exists [%s, %s]", origin, destination));
-        }
-
-        if(shortestPathOriginStation != null) {
-            if(!shortestPathOriginStation.equalsIgnoreCase(originStation.getName())) {
-                throw new IllegalArgumentException("This instance can return shortest distance only when origin is " + origin);
-            }
-        } else {
-            // compute shortest paths to all stations from this origin
-            ShortestPath shortestPath = TrainGuideFactory.getShortestPath();
-            shortestPath.setShortestPathFromOrigin(this, origin);
-        }
-
-        return destinationStation.getDistanceFromOrigin();
-
     }
 
     private void getRoutesByDistance(Station destination,
