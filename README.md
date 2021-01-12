@@ -1,10 +1,9 @@
-# trainguide
+# TRAIN GUIDE 
 
-##Sample Graph Data Files
+## Sample Graph Data Files
 There are sample graph data files provided under trainguide/src/main/resources/sample_data
 
 * ethic_sample.csv : example provided by Ethic
-* 
 * 
 
 Graph data file format:
@@ -34,7 +33,7 @@ Format:
 Default delimiter is comma (configurable)
 
 
-##How to compile and run the program
+## How to compile and run the program
 
 _**1.  Prerequisites to compile the program**_
 
@@ -65,7 +64,7 @@ java -cp target/trainguide-1.0-jar-with-dependencies.jar com.ethic.trainguide.Tr
 
  
 
-##How to run unit tests
+## How to run unit tests
 
 To run the unit tests, execute the following command from the "trainguide" folder
 
@@ -74,7 +73,7 @@ mvn test
 ```
 (The test would also run as part of "mvn package")
 
-##Assumptions
+## Assumptions
 
 * The data in the provided graph input file is valid
 
@@ -88,8 +87,9 @@ For example, if there is a bi-directional route between C and D with edge distan
 So, the jvm is expected to be provided appropriate memory proportional to the graph data file size, plus additional object/variables and LRU cache overhead.
 When passing in initial/max memory (-Xms and -Xmx) the following should be taken into consideration
     *  File size - all routes from the graph file will be loaded into a TrainRoute object with adjacent station associations. 
-    *  TrainRoute object stores ALL station names, adjacent stations and distance to adjacent stations in memory.  Additional buffer should be accounted for class/instance variables overhead.
-    *  There is a simple LRUCache supported in the application for caching shortest distances from a given origin, and the default cache size is 50 elements.  Additional memory should be given if the cache capacity is increased.  
+    *  TrainRoute object stores ALL station names, adjacent stations and distance to adjacent stations in memory.  
+    Additional buffer should be accounted for class/instance variables overhead.
+    *  There is a simple LRUCache supported in the application for caching shortest distances from a given origin, 
+    and the default cache size is 50 elements.  Additional memory should be given if the cache capacity is increased.  
 
 * The command line client interface is single threaded, so only person can interact with an instance of the process/application at a time.
-
