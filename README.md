@@ -50,19 +50,24 @@ mvn package
 ```
 **_3.  Running the program_**
 
-To start the program, execute the following command with your preferred graph data file.
+_Quick start_
+To quick start the program with the graph data file provided in the exercise, just execute the following command.
+It will run tests, create the jar file and execute the program.
+```
+./run.sh
+``` 
+
+_To start with custom graph file and column delimiter_
+To pass in your custom graph data file, execute the following command with your preferred file.
 
 ```
 java -cp target/trainguide-1.0-jar-with-dependencies.jar com.ethic.trainguide.TrainGuide -routeGraphFile src/main/resources/sample_data/ethic_sample.csv
 ```  
 
-To start the program, with a preferred column delimiter:
+To pass in a preferred column delimiter:
 ```
 java -cp target/trainguide-1.0-jar-with-dependencies.jar com.ethic.trainguide.TrainGuide -routeGraphFile src/main/resources/sample_data/ethic_sample.csv -delimiter ","
-```  
-
-
- 
+```
 
 ## How to run unit tests
 
