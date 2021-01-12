@@ -6,6 +6,7 @@ import com.ethic.trainguide.domain.TrainRoute;
 import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
@@ -50,14 +51,22 @@ public class TrainRouteGraphImpl_BuilderTest extends TrainGuideTestBase {
     public void testInvalidInput_ForColumnDelimiter() throws CannotBuildTrainRouteException {
         new TrainRouteGraphImpl.Builder()
                 .withColumnDelimiter("")
-                .withInputStream(getResourceAsInputStream("test_data_valid.txt"));
+                .withInputStream(getResourceAsInputStream(GRAPH_RESOURCE_FILE_WITH_VALID_DATA));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidInput_ForDistance() throws CannotBuildTrainRouteException {
         new TrainRouteGraphImpl.Builder()
                 .withColumnDelimiter(",")
-                .withInputStream(getResourceAsInputStream("test_data_invalid.txt"))
+                .withInputStream(getResourceAsInputStream(GRAPH_RESOURCE_FILE_WITH_NEGATIVE_DISTANCE))
+                .build();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidInput_ForNoOfColumnsInGraphFile() throws CannotBuildTrainRouteException {
+        new TrainRouteGraphImpl.Builder()
+                .withColumnDelimiter(",")
+                .withInputStream(getResourceAsInputStream(GRAPH_RESOURCE_FILE_WITH_NEGATIVE_DISTANCE))
                 .build();
     }
 

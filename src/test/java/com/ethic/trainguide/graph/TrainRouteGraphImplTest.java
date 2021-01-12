@@ -7,6 +7,7 @@ import com.ethic.trainguide.exception.CannotBuildTrainRouteException;
 import com.ethic.trainguide.exception.NoSuchRouteException;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +44,18 @@ public class TrainRouteGraphImplTest extends TrainGuideTestBase {
             assertTrue(String.format("Station %s not found trainRoute [%s]", s.getName(), trainRoute.getStations()),
                     station.getName().equalsIgnoreCase(s.getName()));
         });
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetDistanceOfRoute_ForNullRoute() throws NoSuchRouteException, CannotBuildTrainRouteException {
+        TrainRoute trainRoute = getAValidTrainRoute();
+        trainRoute.getDistanceOfRoute(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetDistanceOfRoute_ForEmptyRoute() throws NoSuchRouteException, CannotBuildTrainRouteException {
+        TrainRoute trainRoute = getAValidTrainRoute();
+        trainRoute.getDistanceOfRoute(new ArrayList<String>());
     }
 
     @Test

@@ -13,8 +13,9 @@ import java.util.stream.Collectors;
 
 public class TrainGuideTestBase {
 
-    protected static final String GRAPH_RESOURCE_FILE_WITH_VALID_DATA = "test_data_valid.txt";
-    protected static final String GRAPH_RESOURCE_FILE_WITH_INVALID_DATA = "test_data_invalid.txt";
+    protected static final String GRAPH_RESOURCE_FILE_WITH_VALID_DATA = "test_data_valid.csv";
+    protected static final String GRAPH_RESOURCE_FILE_WITH_NEGATIVE_DISTANCE = "test_data_invalid_negative_distance.csv";
+    protected static final String GRAPH_RESOURCE_FILE_WITH_LESS_COLUMNS = "test_data_invalid_less_columns.csv";
 
     protected final List<Station> EXPECTED_STATIONS = Arrays.asList(
             new Station("A"),
@@ -37,7 +38,7 @@ public class TrainGuideTestBase {
     protected TrainRoute getAnInValidTrainRoute() throws CannotBuildTrainRouteException {
         return new TrainRouteGraphImpl.Builder()
                 .withColumnDelimiter(",")
-                .withInputStream(getResourceAsInputStream(GRAPH_RESOURCE_FILE_WITH_INVALID_DATA))
+                .withInputStream(getResourceAsInputStream(GRAPH_RESOURCE_FILE_WITH_LESS_COLUMNS))
                 .build();
     }
 
