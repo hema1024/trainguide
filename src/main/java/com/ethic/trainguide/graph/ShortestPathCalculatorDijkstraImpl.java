@@ -13,7 +13,6 @@ import static com.ethic.trainguide.graph.TrainRouteValidate.validateTrainRoute;
  * Implementation of shortest path from origin station to the rest of the stations
  * in the TrainRoute object.  This implementation uses the Dijkstra's algorithm for
  * finding the shortest path.
- * Time complexity : O(V2)
  */
 public class ShortestPathCalculatorDijkstraImpl implements ShortestPathCalculator {
 
