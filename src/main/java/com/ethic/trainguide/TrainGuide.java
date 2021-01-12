@@ -1,5 +1,6 @@
 package com.ethic.trainguide;
 
+import com.ethic.trainguide.factory.TrainGuideFactory;
 import org.apache.commons.cli.*;
 
 /**
@@ -83,7 +84,7 @@ public class TrainGuide {
             System.exit(-1);
         }
 
-        TrainGuideCliInterface cliInterface = new TrainGuideCliInterface(
+        TrainGuideCli cliInterface = TrainGuideFactory.getTrainGuideCli(
                 CommandLineParser.getOptionRouteGraphFile(),
                 CommandLineParser.getDelimiter());
 

@@ -22,11 +22,9 @@ import static com.ethic.trainguide.Menu.*;
  * class for printing options/questions on command line interface,
  * taking user input and printing results
  */
-public class TrainGuideCliInterface {
+public class TrainGuideCliCommandLineImpl implements TrainGuideCli {
 
     private static String OUTPUT_PREFIX = "ANSWER : ";
-    private static int LRU_CACHE_CAPACITY = 50;
-
     private String graphDataFileName;
     private String columnDelimiter;
     private TrainRoute trainRoute;
@@ -35,7 +33,7 @@ public class TrainGuideCliInterface {
     private ShortestPathCalculator shortestPathCalculator;
 
 
-    public TrainGuideCliInterface(String graphDataFileName, String columnDelimiter) {
+    public TrainGuideCliCommandLineImpl(String graphDataFileName, String columnDelimiter) {
         if(StringUtils.isEmpty(graphDataFileName) || StringUtils.isEmpty(columnDelimiter)) {
             throw new IllegalArgumentException("graphDataFileName/columnDelimiter must not be null");
         }
@@ -43,7 +41,7 @@ public class TrainGuideCliInterface {
         this.graphDataFileName = graphDataFileName;
         this.columnDelimiter = columnDelimiter;
         this.scanner = new Scanner(System.in);
-        this.lruCache = TrainGuideFactory.getLRUCache(LRU_CACHE_CAPACITY);
+        this.lruCache = TrainGuideFactory.getLRUCache();
         this.shortestPathCalculator = TrainGuideFactory.getShortestPathCalculator();
     }
 
@@ -89,6 +87,7 @@ public class TrainGuideCliInterface {
     /**
      * Run the client interface
      */
+    @Override
     public void run() {
 
         // read the input file and prepare train route graph object

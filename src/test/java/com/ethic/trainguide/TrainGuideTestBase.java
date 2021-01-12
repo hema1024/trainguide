@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 
 public class TrainGuideTestBase {
 
+    protected static final String GRAPH_RESOURCE_FILE_WITH_VALID_DATA = "test_data_valid.txt";
+    protected static final String GRAPH_RESOURCE_FILE_WITH_INVALID_DATA = "test_data_invalid.txt";
+
     protected final List<Station> EXPECTED_STATIONS = Arrays.asList(
             new Station("A"),
             new Station("B"),
@@ -27,14 +30,14 @@ public class TrainGuideTestBase {
     protected TrainRoute getAValidTrainRoute() throws CannotBuildTrainRouteException {
         return new TrainRouteGraphImpl.Builder()
                 .withColumnDelimiter(",")
-                .withInputStream(getResourceAsInputStream("test_data_valid.txt"))
+                .withInputStream(getResourceAsInputStream(GRAPH_RESOURCE_FILE_WITH_VALID_DATA))
                 .build();
     }
 
     protected TrainRoute getAnInValidTrainRoute() throws CannotBuildTrainRouteException {
         return new TrainRouteGraphImpl.Builder()
                 .withColumnDelimiter(",")
-                .withInputStream(getResourceAsInputStream("test_data_invalid.txt"))
+                .withInputStream(getResourceAsInputStream(GRAPH_RESOURCE_FILE_WITH_INVALID_DATA))
                 .build();
     }
 

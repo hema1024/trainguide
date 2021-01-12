@@ -22,6 +22,13 @@ public class LRUCacheLinkedHashMapImplTest {
         assertTrue(cache.getItem(3) != null);
     }
 
+    @Test
+    public void testSetCapacity() {
+        LRUCache<Integer, String> cache = new LRUCacheLinkedHashMapImpl(3);
+
+        cache.setCapacity(2);
+        assertTrue(cache.getCapacity() == 2);
+    }
 
     @Test
     public void testLRUItemIsRemoved() {

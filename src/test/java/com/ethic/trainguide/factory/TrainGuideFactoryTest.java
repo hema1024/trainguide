@@ -1,5 +1,6 @@
 package com.ethic.trainguide.factory;
 
+import com.ethic.trainguide.TrainGuideCli;
 import com.ethic.trainguide.TrainGuideTestBase;
 import com.ethic.trainguide.cache.LRUCache;
 import com.ethic.trainguide.domain.TrainRoute;
@@ -23,14 +24,22 @@ public class TrainGuideFactoryTest extends TrainGuideTestBase {
     }
 
     @Test
-    public void tesGetShortestPathCalculator() throws CannotBuildTrainRouteException {
+    public void tesGetShortestPathCalculator() {
         assertTrue(TrainGuideFactory.getShortestPathCalculator() != null);
     }
 
     @Test
-    public void tesGetLRUCache() throws CannotBuildTrainRouteException {
-        LRUCache cache = TrainGuideFactory.getLRUCache(5);
+    public void tesGetLRUCache() {
+        LRUCache cache = TrainGuideFactory.getLRUCache();
         assertTrue(cache != null);
-        assertTrue(cache.getCapacity() == 5);
+        assertTrue(cache.getCapacity() == TrainGuideFactory.LRU_CACHE_CAPACITY);
+    }
+
+    @Test
+    public void tesGetTrainGuideCli() {
+        TrainGuideCli cli = TrainGuideFactory.getTrainGuideCli(
+                getClass().getClassLoader().getResource(GRAPH_RESOURCE_FILE_WITH_VALID_DATA).getFile(), ",");
+
+        assertTrue(cli != null);
     }
 }
